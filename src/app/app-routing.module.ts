@@ -18,7 +18,12 @@ const routes: Routes = [
   {path: 'responses', component: ResponsesComponent, title: 'responses', canActivate: [AuthGuard]},
   {path: 'fields', component: FieldsComponent, title: 'fields', canActivate: [AuthGuard]},
   {path: 'profile/edit', component: EditProfileComponent, title: 'edit profile', canActivate: [AuthGuard]},
-  {path: 'profile/change-password', component: ChangePasswordComponent, title: 'change password', canActivate: [AuthGuard]},
+  {
+    path: 'profile/change-password',
+    component: ChangePasswordComponent,
+    title: 'change password',
+    canActivate: [AuthGuard]
+  },
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]
 
@@ -26,4 +31,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
