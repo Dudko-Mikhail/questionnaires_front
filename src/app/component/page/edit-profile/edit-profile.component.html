@@ -1,1 +1,55 @@
-<p>edit-profile works!</p>
+<form class="border rounded-3 py-3" [formGroup]="editProfileForm" (ngSubmit)="submit()">
+  <div class="ps-3">
+    <div class="fs-5 mb-3 fw-semibold">Edit Profile</div>
+  </div>
+  <hr class="mb-6"/>
+  <div class="px-5">
+    <div class="mb-3">
+      <label class="form-label">First Name</label>
+      <input class="form-control" type="text" formControlName="firstName"
+             [class.is-invalid]="firstName.dirty && firstName.invalid"
+             [class.is-valid]="firstName.dirty && firstName.valid">
+      <div class="invalid-feedback" *ngIf="firstName.errors?.['maxlength']">
+        {{'Length should be less than ' + firstName.errors?.['maxlength']['requiredLength']}}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Last Name</label>
+      <input class="form-control" type="text" formControlName="lastName"
+             [class.is-invalid]="lastName.dirty && lastName.invalid"
+             [class.is-valid]="lastName.dirty && lastName.valid">
+      <div class="invalid-feedback" *ngIf="lastName.errors?.['maxlength']">
+        {{'Length should be less than ' + lastName.errors?.['maxlength']['requiredLength']}}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input class="form-control" type="email" formControlName="email"
+             [class.is-invalid]="email.touched && email.invalid"
+             [class.is-valid]="email.touched && email.valid">
+      <div class="invalid-feedback" *ngIf="email.touched && email.invalid">
+        <div *ngIf="email.errors?.['email']">Invalid email format</div>
+        <div *ngIf="email.errors?.['maxlength']">
+          {{'Length should be less than ' + email.errors?.['maxlength']['requiredLength']}}
+        </div>
+        <div *ngIf="email.errors?.['required']">Email is required</div>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Phone Number</label>
+      <input class="form-control" type="tel" formControlName="phoneNumber"
+             [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"
+             [class.is-valid]="phoneNumber.dirty && phoneNumber.valid">
+      <div class="invalid-feedback" *ngIf="phoneNumber.touched && phoneNumber.invalid">
+        <div *ngIf="phoneNumber.errors?.['maxlength']">
+          {{'Length should be less than ' + phoneNumber.errors?.['maxlength']['requiredLength']}}
+        </div>
+        <div *ngIf="phoneNumber.errors?.['minlength']">
+          {{'Length should be more than ' + phoneNumber.errors?.['minlength']['requiredLength']}}
+        </div>
+      </div>
+    </div>
+
+    <button [disabled]="editProfileForm.invalid" type="submit" class="btn btn-primary w-25">Save</button>
+  </div>
+</form>
