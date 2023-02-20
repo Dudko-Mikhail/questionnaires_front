@@ -1,0 +1,50 @@
+<nav aria-label="pagination" class="d-flex align-items-center justify-content-between">
+  <div>
+    {{computeFirstElementIndex()}}-{{computeLastElementIndex()}} of {{pageInfo.totalElements}}
+  </div>
+  <ul class="pagination m-0">
+    <li class="page-item">
+      <a class="page-link" [routerLink]="basePath" [queryParams]="{'page': pageInfo.page - 1, 'size': size}"
+         [class.disabled]="isFirst()"><</a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" [routerLink]="basePath" [queryParams]="{'page': 1, 'size': size}"
+         [class.active]="isFirst()">1</a>
+    </li>
+
+    <li class="page-item disabled"
+        *ngIf="showLeftThreeDots()">
+      <span class="page-link">...</span>
+    </li>
+
+    <li class="page-item" *ngFor="let page of getCentralPageNumbers()">
+      <a class="page-link" [routerLink]="basePath" [queryParams]="{'page': page, 'size': size}"
+         routerLinkActive="active">{{page}}</a>
+    </li>
+
+    <li class="page-item disabled"
+        *ngIf="showRightThreeDots()">
+      <span class="page-link">...</span>
+    </li>
+
+    <li class="page-item" *ngIf="pageInfo.totalPages > 1">
+      <a class="page-link" [routerLink]="basePath" [queryParams]="{'page': pageInfo.totalPages, 'size': size}"
+         routerLinkActive="active">
+        {{pageInfo.totalPages}}
+      </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" [routerLink]="basePath" [queryParams]="{'page': pageInfo.page + 1, 'size': size}"
+         [class.disabled]="isLast()">></a>
+    </li>
+  </ul>
+  <form class="d-flex align-items-center" (ngSubmit)="goToPage()">
+    <div class="input-group">
+      <input class="form-control" placeholder="page" type="number" name="page" min="1" #pageInput="ngModel"
+             [max]="pageInfo.totalPages" [(ngModel)]="page">
+      <button type="submit" class="btn btn-primary" [class.disabled]="pageInput.invalid || !pageInput.value">Go</button>
+    </div>
+  </form>
+</nav>

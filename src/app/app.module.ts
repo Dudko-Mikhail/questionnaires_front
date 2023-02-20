@@ -15,6 +15,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {httpInterceptorProviders} from "./interceptor";
+import { PaginationComponent } from './component/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {httpInterceptorProviders} from "./interceptor";
     QuestionnairesComponent,
     ResponsesComponent,
     SignUpComponent,
-    NavigationComponent
+    NavigationComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,
