@@ -1,1 +1,29 @@
-<p>fields works!</p>
+<div class="d-flex justify-content-between border border-bottom-0 rounded align-items-center px-3 py-3">
+  <div class="fw-bold fs-5">Fields</div>
+  <button class="btn btn-primary fs-6" data-bs-toggle="modal" data-bs-target="#addField">
+    + ADD FIELD
+  </button>
+</div>
+<div class="border rounded px-3">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Label</th>
+      <th>Type</th>
+      <th>Active</th>
+      <th>Required</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let field of fields.content">
+      <td>{{field.label}}</td>
+      <td>{{field.type}}</td>
+      <td>{{field.isActive}}</td>
+      <td>{{field.isRequired}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="mt-1 mb-3">
+    <app-pagination *ngIf="fields.metadata" [pageInfo]="fields.metadata" [basePath]="path"></app-pagination>
+  </div>
+</div>
