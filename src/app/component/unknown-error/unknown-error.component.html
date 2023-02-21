@@ -1,0 +1,6 @@
+<div *ngIf="message" class="error w-100">
+  <div class="container d-flex align-items-center justify-content-between py-2 fs-5">
+    <div>{{message}}</div>
+    <div class="close me-3" aria-label="close" (click)="close()"></div>
+  </div>
+</div>

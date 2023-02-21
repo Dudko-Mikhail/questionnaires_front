@@ -1,23 +1,26 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http'
-import {map, Observable, retry} from "rxjs";
+import {HttpClient, HttpErrorResponse} from '@angular/common/http'
+import {catchError, map, Observable, retry, throwError} from "rxjs";
 import {IUser} from "../model/user/IUser";
 import {environment} from "../../environments/environment";
 import {User} from "../model/user/User";
 import {AuthenticationService} from "./authentication.service";
+import {ErrorService} from "./error.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient, private auth: AuthenticationService) {
+  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService) {
   }
 
   findUserById(userId: number): Observable<User> {
     return this.http.get<IUser>(`${environment.apiUrl}/api/users/${userId}`)
-      .pipe(retry(3),
-        map(this.mapUser)
+      .pipe(
+        retry(3),
+        map(this.mapUser),
+        catchError(this.handleError.bind(this))
       )
   }
 
@@ -25,11 +28,25 @@ export class UserService {
     return this.http.put<IUser>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}`, data)
       .pipe(
         retry(3),
-        map(this.mapUser)
+        map(this.mapUser),
+        catchError(this.handleError.bind(this))
+      )
+  }
+
+  signUp(data: any): Observable<string> {
+    return this.http.post<string>(`${environment.apiUrl}/api/users`, data)
+      .pipe(
+        retry(3),
+        catchError(this.handleError.bind(this))
       )
   }
 
   private mapUser(userInfo: IUser): User {
     return new User(userInfo)
+  }
+
+  private handleError(err: HttpErrorResponse): Observable<any> {
+    this.errorService.handleError(err)
+    return throwError(() => err)
   }
 }

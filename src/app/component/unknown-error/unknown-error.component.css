@@ -1,0 +1,32 @@
+.error {
+  background-color: #d91c1c;
+  color: white;
+}
+
+.close {
+  position: relative;
+  cursor: pointer;
+  content: '';
+  width: 24px;
+  height: 24px;
+}
+
+.close::before,
+.close::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 10%;
+  transform: translate(-50%, 50%);
+  background-color: white;
+}
+
+.close:after {
+  transform: rotate(45deg);
+}
+
+.close:before {
+  transform: rotate(-45deg);
+}

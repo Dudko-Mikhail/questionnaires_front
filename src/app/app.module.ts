@@ -15,7 +15,10 @@ import {AppRoutingModule} from "./app-routing.module";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {httpInterceptorProviders} from "./interceptor";
-import { PaginationComponent } from './component/pagination/pagination.component';
+import {PaginationComponent} from './component/pagination/pagination.component';
+import {AddFieldComponent} from './component/modal/add-field/add-field.component';
+import {ContinueRegistrationComponent} from './component/modal/continue-registration/continue-registration.component';
+import {UnknownErrorComponent} from './component/unknown-error/unknown-error.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { PaginationComponent } from './component/pagination/pagination.component
     ResponsesComponent,
     SignUpComponent,
     NavigationComponent,
-    PaginationComponent
+    PaginationComponent,
+    AddFieldComponent,
+    ContinueRegistrationComponent,
+    UnknownErrorComponent
   ],
   imports: [
     BrowserModule,

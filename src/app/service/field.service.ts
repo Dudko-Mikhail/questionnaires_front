@@ -5,12 +5,13 @@ import {catchError, Observable, retry, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {PagedResponse} from "../model/PagedResponse";
+import {ErrorService} from "./error.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FieldService {
-  constructor(private http: HttpClient, private auth: AuthenticationService) {
+  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService) {
   }
 
   findFieldsByUserId(userId: number, page?: number, size?: number): Observable<PagedResponse<Field>> {
@@ -26,7 +27,15 @@ export class FieldService {
     })
       .pipe(
         retry(3),
-        catchError(this.errorHandler)
+        catchError(this.handleError.bind(this))
+      )
+  }
+
+  deleteFieldById(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/api/fields/${id}`)
+      .pipe(
+        retry(3),
+        catchError(this.handleError.bind(this))
       )
   }
 
@@ -36,20 +45,14 @@ export class FieldService {
 
   addField(body: any): Observable<Field> {
     return this.http.post<Field>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, body)
-      .pipe(retry(3))
+      .pipe(
+        retry(3),
+        catchError(this.handleError.bind(this))
+      )
   }
 
-  private errorHandler(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
-      console.error(
-        `Backend returned code ${error.status}, body was: `, error.error);
-    }
-    // Return an observable with a user-facing error message.
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+  private handleError(err: HttpErrorResponse): Observable<any> {
+    this.errorService.handleError(err)
+    return throwError(() => err)
   }
 }
