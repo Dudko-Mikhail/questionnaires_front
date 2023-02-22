@@ -9,7 +9,7 @@ export class ErrorService {
   private static ERROR_LIVE_TIME = 6000
   message$: Subject<string> = new BehaviorSubject('')
 
-  handleError(error: HttpErrorResponse) {
+  handleServerAndUnknownErrors(error: HttpErrorResponse) {
     if (error.status === 0) {
       this.message$.next(error.message)
       setTimeout(this.clear.bind(this), ErrorService.ERROR_LIVE_TIME)
@@ -18,6 +18,11 @@ export class ErrorService {
       this.message$.next(`Server error occurred. ${error.message}`)
       setTimeout(this.clear.bind(this), ErrorService.ERROR_LIVE_TIME)
     }
+  }
+
+  handleAllErrors(error: HttpErrorResponse) {
+    this.message$.next(error.message)
+    setTimeout(this.clear.bind(this), ErrorService.ERROR_LIVE_TIME)
   }
 
   clear(): void {
