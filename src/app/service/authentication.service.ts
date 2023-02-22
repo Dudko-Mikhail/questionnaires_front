@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Credentials} from "../model/Credentials";
 import {environment} from "../../environments/environment";
-import {ReplaySubject, retry, Subject} from "rxjs";
+import {BehaviorSubject, catchError, Observable, retry, Subject, throwError} from "rxjs";
 import {AuthenticationResponse} from "../model/AuthenticationResponse";
+import {ErrorService} from "./error.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +12,26 @@ import {AuthenticationResponse} from "../model/AuthenticationResponse";
 export class AuthenticationService {
   private static TOKEN_KEY = 'token'
   private static USER_ID_KEY = 'id'
-  private authentication$: Subject<boolean> = new ReplaySubject()
+  private authentication$: Subject<boolean> = new BehaviorSubject(false)
   token: string | null = null
   userId: number | null = null
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private errorService: ErrorService) {
     this.sessionLogin()
     if (!this.isAuthenticated()) {
       this.rememberMeLogin()
     }
   }
 
-  logIn(credentials: Credentials, rememberMe: boolean): Subject<boolean> {
-    const subject: Subject<boolean> = new ReplaySubject<boolean>(1)
+  logIn(credentials: Credentials, rememberMe: boolean): Subject<void> {
+    const subject: Subject<void> = new Subject()
     this.http.post<AuthenticationResponse>(`${environment.apiUrl}/api/auth/login`, credentials)
-      .pipe(retry(3))
+      .pipe(
+        retry(3),
+        catchError(this.handleError.bind(this))
+      )
       .subscribe({
-        next: (response: AuthenticationResponse) => {
+        next:(response: AuthenticationResponse) => {
           this.token = response.token
           this.userId = response.userId
           if (rememberMe) {
@@ -38,11 +42,18 @@ export class AuthenticationService {
             sessionStorage.setItem(AuthenticationService.TOKEN_KEY, this.token)
           }
           this.authentication$.next(true)
-          subject.next(true)
+          subject.next()
         },
-        error: err => subject.next(false)
+        error: (err: HttpErrorResponse) => {
+          subject.error(err)
+        }
       })
     return subject
+  }
+
+  private handleError(err: HttpErrorResponse): Observable<any> {
+    this.errorService.handleServerAndUnknownErrors(err)
+    return throwError(() => err)
   }
 
   rememberMeLogin(): void {
@@ -51,6 +62,7 @@ export class AuthenticationService {
     if (id && token) {
       this.token = token
       this.userId = +id
+      this.authentication$.next(true)
     }
   }
 
@@ -60,6 +72,7 @@ export class AuthenticationService {
     if (id && token) {
       this.token = token
       this.userId = +id
+      this.authentication$.next(true)
     }
   }
 

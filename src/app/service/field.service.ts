@@ -52,7 +52,7 @@ export class FieldService {
   }
 
   private handleError(err: HttpErrorResponse): Observable<any> {
-    this.errorService.handleError(err)
+    this.errorService.handleServerAndUnknownErrors(err)
     return throwError(() => err)
   }
 }
