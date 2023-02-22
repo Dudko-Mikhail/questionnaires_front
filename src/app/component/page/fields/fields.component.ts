@@ -17,7 +17,6 @@ export class FieldsComponent implements OnInit {
   }
 
   constructor(private fieldService: FieldService, private activeRoute: ActivatedRoute) {
-
   }
 
   ngOnInit(): void {
@@ -32,4 +31,20 @@ export class FieldsComponent implements OnInit {
         );
     })
   }
+
+  deleteField(id: number): void {
+    this.fieldService.deleteFieldById(99)
+      .subscribe({
+        next: () => {
+          window.location.reload()
+        },
+        error: (err) => alert(JSON.stringify(err))
+      })
+  }
+
+  editField(id: number): void {
+    alert(id)
+  }
+
+
 }

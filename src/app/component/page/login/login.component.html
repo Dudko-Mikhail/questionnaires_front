@@ -4,6 +4,10 @@
     <div class="fs-5 mb-3">Sign In</div>
   </div>
 
+  <div *ngIf="showBadCredentialsMessage$ | async" class="alert alert-danger fs-5 mb-2 text-center">
+    Invalid login or password
+  </div>
+
   <div class="mb-2">
     <input class="form-control" type="email" placeholder="Email" formControlName="email"
            [class.is-invalid]="email.touched && email.invalid"
@@ -30,3 +34,7 @@
                                                   class="fw-semibold text-decoration-none text-primary">Sign Up</a>
   </div>
 </form>
+<button id="triggerModal" class="btn btn-primary fs-6 d-none" data-bs-toggle="modal" data-bs-target="#continueRegistration">
+  todo refactor me
+</button>
+<app-continue-registration [email]="this.email.value"></app-continue-registration>

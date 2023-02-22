@@ -1,0 +1,95 @@
+<div class="modal fade" id="{{modalId}}" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-light mb-3">
+        <h1 class="modal-title fs-5 fw-semibold">Add Field</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+      <form [formGroup]="addFieldForm" (ngSubmit)="submit()">
+        <div class="modal-body px-2">
+          <div class="row mb-3">
+            <label class="col-form-label col-3 text-end">Label</label>
+            <div class="col-8">
+              <input class="form-control" formControlName="label" type="text"
+                     [class.is-invalid]="label.touched && label.invalid"
+                     [class.is-valid]="label.touched && label.valid">
+              <div class="invalid-feedback" *ngIf="label.invalid && label.touched">
+                <div *ngIf="label.errors?.['required']">Label is required</div>
+                <div *ngIf="label.errors?.['maxlength']">
+                  {{'Length should be less than ' + label.errors?.['maxlength']['requiredLength']}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-form-label col-3 text-end">Type</label>
+            <div class="col-8">
+              <select class="form-select" formControlName="type"
+                      [class.is-invalid]="type.touched && type.invalid"
+                      [class.is-valid]="type.touched && type.valid">
+                <option value="">Choose Option</option>
+                <option *ngFor="let fieldType of types" value="{{fieldType}}">{{fieldType}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="type.errors?.['required']">Type is required</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="row" *ngIf="type.value === 'Combobox' || type.value === 'Radio button'">
+              <label class="col-form-label col-3 text-end">Options</label>
+              <div class="col-8" formArrayName="options">
+                <div class="mb-2" *ngFor="let option of options.controls; let i = index">
+                  <input class="form-control mb-1" [formControlName]="i" (change)="removeIfEmpty($event, i)"
+                         [class.is-invalid]="options.at(i).invalid">
+                  <div class="invalid-feedback" *ngIf="options.at(i).invalid">
+                    {{'Length should be less than ' + options.at(i).errors?.['maxlength']['requiredLength']}}
+                  </div>
+                </div>
+                <form class="mb-1 row" [formGroup]="addNewOptionForm" (ngSubmit)="addOption()"
+                      *ngIf="type.value === 'Combobox' || type.value === 'Radio button'">
+                  <div class="input-group">
+                    <input class="form-control" type="text" formControlName="newOption" aria-describedby="addButton"
+                           placeholder="New option"
+                           [class.is-invalid]="newOption.touched && newOption.invalid"
+                           [class.is-valid]="newOption.value && newOption.valid">
+                    <button [disabled]="addNewOptionForm.invalid || !newOption.value"
+                            class="btn btn-outline-secondary rounded-end" id="addButton">Add
+                    </button>
+                    <div class="invalid-feedback" *ngIf="newOption.invalid && newOption.touched">
+                      <div *ngIf="newOption.errors?.['maxlength']">
+                        {{'Length should be less than ' + newOption.errors?.['maxlength']['requiredLength']}}
+                      </div>
+                      <div *ngIf="newOption.errors?.['required']">
+                        At least one option is required
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-3 opacity-0">WHITESPACE</div>
+            <div class="col-8 row">
+              <div class="col-auto me-3 d-flex">
+                <input class="form-check-input" type="checkbox" formControlName="required">
+                <label class="ms-2">Required</label>
+              </div>
+              <div class="col-auto d-flex">
+                <input class="form-check-input" type="checkbox" formControlName="active">
+                <label class="ms-2">Is Active</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light fw-semibold fs-6">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+          <button type="submit" [disabled]="addFieldForm.invalid" class="btn btn-primary">SAVE
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

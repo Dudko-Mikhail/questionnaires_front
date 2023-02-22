@@ -1,1 +1,69 @@
-<p>sign-up works!</p>
+<form class="border rounded-3 px-5 py-3" [formGroup]="signUpForm" (ngSubmit)="submit()">
+  <div class="text-center">
+    <div class="fs-2 mb-3">LOGOTYPE</div>
+    <div class="fs-5 mb-3">Sign Up</div>
+  </div>
+
+  <div *ngIf="showEmailIsNotUnique$ | async" class="alert alert-danger fs-5 mb-2 text-center">
+    This email: {{this.email}} is already taken
+  </div>
+
+  <div class="mb-2">
+    <input class="form-control" formControlName="email" type="email" placeholder="Email"
+           [class.is-invalid]="email.touched && email.invalid"
+           [class.is-valid]="email.touched && email.valid">
+    <div class="invalid-feedback" *ngIf="email.touched && email.invalid">
+      <div *ngIf="email.errors?.['email']">Invalid email format</div>
+      <div *ngIf="email.errors?.['maxlength']">
+        {{'Length should be less than ' + email.errors?.['maxlength']['requiredLength']}}
+      </div>
+      <div *ngIf="email.errors?.['required']">Email is required</div>
+    </div>
+  </div>
+  <div class="mb-2">
+    <input class="form-control" formControlName="password" type="password" placeholder="Password"
+           [class.is-invalid]="password.touched && password.invalid"
+           [class.is-valid]="password.touched && password.valid">
+    <div class="invalid-feedback" *ngIf="password.errors?.['required']">Password is required</div>
+  </div>
+  <div class="mb-2">
+    <input class="form-control" formControlName="confirmPassword" type="password" placeholder="Confirm Password"
+           [class.is-invalid]="signUpForm.errors?.['mismatch']"
+           [class.is-valid]="confirmPassword.value && !signUpForm.errors?.['mismatch']">
+    <div class="invalid-feedback" *ngIf="signUpForm.errors?.['mismatch']">Password do not match</div>
+  </div>
+  <div class="mb-2">
+    <input class="form-control" formControlName="firstName" type="text" placeholder="First Name"
+           [class.is-invalid]="firstName.dirty && firstName.invalid"
+           [class.is-valid]="firstName.dirty && firstName.valid">
+    <div class="invalid-feedback" *ngIf="firstName.errors?.['maxlength']">
+      {{'Length should be less than ' + firstName.errors?.['maxlength']['requiredLength']}}
+    </div>
+  </div>
+  <div class="mb-2">
+    <input class="form-control" formControlName="lastName" type="text" placeholder="Last Name"
+           [class.is-invalid]="lastName.dirty && lastName.invalid"
+           [class.is-valid]="lastName.dirty && lastName.valid">
+    <div class="invalid-feedback" *ngIf="lastName.errors?.['maxlength']">
+      {{'Length should be less than ' + lastName.errors?.['maxlength']['requiredLength']}}
+    </div>
+  </div>
+  <div class="mb-4">
+    <input class="form-control" formControlName="phoneNumber" type="tel" placeholder="Phone Number"
+           [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"
+           [class.is-valid]="phoneNumber.dirty && phoneNumber.valid">
+    <div class="invalid-feedback" *ngIf="phoneNumber.touched && phoneNumber.invalid">
+      <div *ngIf="phoneNumber.errors?.['maxlength']">
+        {{'Length should be less than ' + phoneNumber.errors?.['maxlength']['requiredLength']}}
+      </div>
+      <div *ngIf="phoneNumber.errors?.['minlength']">
+        {{'Length should be more than ' + phoneNumber.errors?.['minlength']['requiredLength']}}
+      </div>
+    </div>
+  </div>
+
+  <button [disabled]="signUpForm.invalid" type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
+  <div class="text-center">Already have account? <a routerLink="/login"
+                                                    class="fw-semibold text-decoration-none text-primary">Log In</a>
+  </div>
+</form>
