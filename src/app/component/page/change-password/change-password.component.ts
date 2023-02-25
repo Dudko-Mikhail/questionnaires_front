@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordConfirmationValidator} from "../../../validator/password.confirmation.validator";
+import {currentPasswordEqualsNewValidator, passwordConfirmationValidator} from "../../../validator/password.validator";
+import {UserService} from "../../../service/user.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {BehaviorSubject, Subject} from "rxjs";
 
 @Component({
   selector: 'app-change-password',
@@ -12,17 +15,44 @@ export class ChangePasswordComponent {
     currentPassword: ['', Validators.required],
     newPassword: ['', Validators.required],
     confirmNewPassword: ['', Validators.required]
-  }, {validators: passwordConfirmationValidator('newPassword', 'confirmNewPassword')})
+  }, {
+    validators: [
+      passwordConfirmationValidator('newPassword', 'confirmNewPassword'),
+      currentPasswordEqualsNewValidator()
+    ]
+  })
 
-  constructor(private formBuilder: FormBuilder) {
+  showInvalidCurrentPasswordMessage$: Subject<boolean> = new BehaviorSubject(false)
+
+  constructor(private formBuilder: FormBuilder, private userService: UserService) {
 
   }
 
-  submit(): void { // todo implement
+  submit(): void {
     if (this.changePasswordForm.invalid) {
       alert("The form is filled with invalid data")
       return
     }
+    this.userService.changePassword({
+      currentPassword: this.currentPassword.value,
+      newPassword: this.newPassword.value
+    })
+      .subscribe({
+        next: () => {
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 400) {
+            this.currentPassword.setValue('')
+            this.showInvalidCurrentPasswordMessage()
+          }
+        }
+      })
+
+  }
+
+  showInvalidCurrentPasswordMessage(): void {
+    this.showInvalidCurrentPasswordMessage$.next(true)
+    setTimeout(() => this.showInvalidCurrentPasswordMessage$.next(false), 5000)
   }
 
   get currentPassword() {
