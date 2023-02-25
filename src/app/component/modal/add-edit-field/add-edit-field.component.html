@@ -29,14 +29,15 @@
                       [class.is-invalid]="type.touched && type.invalid"
                       [class.is-valid]="type.touched && type.valid">
                 <option value="">Choose Option</option>
-                <option *ngFor="let fieldType of types" value="{{fieldType}}">{{fieldType}}</option>
+                <option *ngFor="let fieldType of types"
+                        value="{{fieldType.apiName()}}">{{fieldType.viewName()}}</option>
               </select>
               <div class="invalid-feedback" *ngIf="type.errors?.['required']">Type is required</div>
             </div>
           </div>
 
           <div class="mb-3">
-            <div class="row" *ngIf="type.value === 'Combobox' || type.value === 'Radio button'">
+            <div class="row" *ngIf="hasOptions(type.value)">
               <label class="col-form-label col-3 text-end">Options</label>
               <div class="col-8" formArrayName="options">
                 <div class="mb-2" *ngFor="let option of options.controls; let i = index">
@@ -46,8 +47,7 @@
                     {{'Length should be less than ' + options.at(i).errors?.['maxlength']['requiredLength']}}
                   </div>
                 </div>
-                <form class="mb-1 row" [formGroup]="addNewOptionForm" (ngSubmit)="addOption()"
-                      *ngIf="type.value === 'Combobox' || type.value === 'Radio button'">
+                <form class="mb-1 row" [formGroup]="addNewOptionForm" (ngSubmit)="addOption()">
                   <div class="input-group">
                     <input class="form-control" type="text" formControlName="newOption" aria-describedby="addButton"
                            placeholder="New option"

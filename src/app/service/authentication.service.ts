@@ -31,7 +31,7 @@ export class AuthenticationService {
         catchError(this.handleError.bind(this))
       )
       .subscribe({
-        next:(response: AuthenticationResponse) => {
+        next: (response: AuthenticationResponse) => {
           this.token = response.token
           this.userId = response.userId
           if (rememberMe) {
