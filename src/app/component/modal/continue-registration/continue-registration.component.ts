@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {UserService} from "../../../service/user.service";
 import {interval, take} from "rxjs";
 
@@ -7,15 +7,11 @@ import {interval, take} from "rxjs";
   templateUrl: './continue-registration.component.html',
   styleUrls: ['./continue-registration.component.css']
 })
-export class ContinueRegistrationComponent implements AfterViewInit {
+export class ContinueRegistrationComponent {
   @Input() email: string
-  private timerButton: HTMLButtonElement
+  @ViewChild('sendMessageBtn', {static: false}) timerButton: ElementRef
 
   constructor(private userService: UserService) {
-  }
-
-  ngAfterViewInit(): void {
-    this.timerButton = <HTMLButtonElement>document.getElementById('sendMessageBtn')
   }
 
   sendMessage(): void {
@@ -32,8 +28,8 @@ export class ContinueRegistrationComponent implements AfterViewInit {
     const timerSpan = document.createElement('span')
     timerSpan.textContent = duration.toString();
 
-    this.timerButton.classList.add('disabled')
-    this.timerButton.appendChild(timerSpan);
+    this.timerButton.nativeElement?.classList.add('disabled')
+    this.timerButton.nativeElement?.appendChild(timerSpan);
     const timer = interval(1000)
       .pipe(take(duration))
 
@@ -42,7 +38,7 @@ export class ContinueRegistrationComponent implements AfterViewInit {
         this.tickAction(duration - value, timerSpan)
       },
       complete: () => {
-        this.timerButton.classList.remove('disabled')
+        this.timerButton.nativeElement?.classList.remove('disabled')
         timerSpan.remove()
       }
     })

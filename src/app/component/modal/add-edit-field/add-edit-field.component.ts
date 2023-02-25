@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FieldService} from "../../../service/field.service";
 import {FieldRequest} from "../../../model/field/FieldRequest";
 import {FieldResponse} from "../../../model/field/FieldResponse";
-import {FieldTypeRegistry} from "../../../service/FieldTypeRegistry";
+import {FieldTypeRegistry} from "../../../service/field-type-registry.service";
 import {FieldType} from "../../../model/field/type/FieldType";
 
 @Component({
