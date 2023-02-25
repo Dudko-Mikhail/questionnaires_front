@@ -1,20 +1,37 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {Field} from "../model/Field";
-import {catchError, Observable, retry, throwError} from "rxjs";
+import {catchError, map, Observable, retry, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {PagedResponse} from "../model/PagedResponse";
 import {ErrorService} from "./error.service";
+import {FieldRequest} from "../model/field/FieldRequest";
+import {FieldResponse} from "../model/field/FieldResponse";
+import {IField} from "../model/field/IField";
+import {FieldTypeRegistry} from "./field-type-registry.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FieldService {
-  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService) {
+  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService,
+              private fieldTypeRegistry: FieldTypeRegistry) {
   }
 
-  findFieldsByUserId(userId: number, page?: number, size?: number): Observable<PagedResponse<Field>> {
+  findAllUserFields(id: number): Observable<FieldResponse[]> { // todo add end-point
+    return this.http.get<IField>(`${environment.apiUrl}/users/{id}/fields`)
+      .pipe(
+        map(this.mapToFieldResponse.bind(this)),
+        retry(3),
+        catchError(this.handleError.bind(this))
+      )
+  }
+
+  findSessionUserFields(page?: number, size?: number): Observable<PagedResponse<FieldResponse>> {
+    return this.findFieldsByUserId(this.auth.getUserId(), page, size)
+  }
+
+  findFieldsByUserId(userId: number, page?: number, size?: number): Observable<PagedResponse<FieldResponse>> {
     let params = new HttpParams()
     if (page) {
       params = params.set('page', page)
@@ -22,10 +39,16 @@ export class FieldService {
     if (size) {
       params = params.set('size', size)
     }
-    return this.http.get<PagedResponse<Field>>(`${environment.apiUrl}/api/users/${userId}/fields`, {
+    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/users/${userId}/fields`, {
       params: params
     })
       .pipe(
+        map(response => {
+          return {
+            content: response.content.map(this.mapToFieldResponse.bind(this)),
+            metadata: response.metadata
+          } as PagedResponse<FieldResponse>
+        }),
         retry(3),
         catchError(this.handleError.bind(this))
       )
@@ -39,20 +62,42 @@ export class FieldService {
       )
   }
 
-  findSessionUserFields(page?: number, size?: number): Observable<PagedResponse<Field>> {
-    return this.findFieldsByUserId(this.auth.getUserId(), page, size)
+  addField(field: FieldRequest): Observable<FieldResponse> {
+    return this.http.post<IField>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, field)
+      .pipe(
+        map(this.mapToFieldResponse.bind(this)),
+        retry(3),
+        catchError(this.handleError.bind(this))
+      )
   }
 
-  addField(body: any): Observable<Field> {
-    return this.http.post<Field>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, body)
+  editField(id: number, field: FieldRequest): Observable<FieldResponse> {
+    return this.http.put<IField>(`${environment.apiUrl}/api/fields/${id}`, field)
       .pipe(
+        map(this.mapToFieldResponse.bind(this)),
         retry(3),
         catchError(this.handleError.bind(this))
       )
   }
 
   private handleError(err: HttpErrorResponse): Observable<any> {
-    this.errorService.handleServerAndUnknownErrors(err)
+    this.errorService.handleAllErrors(err)
     return throwError(() => err)
+  }
+
+  private mapToFieldResponse(fieldInfo: IField): FieldResponse {
+    const field = new FieldResponse()
+    if (fieldInfo.id) {
+      field.id = fieldInfo.id
+    }
+    field.isRequired = fieldInfo.isRequired
+    field.isActive = fieldInfo.isActive
+    field.options = fieldInfo.options
+    field.label = fieldInfo.label
+    if (fieldInfo.order) {
+      field.order = fieldInfo.order
+    }
+    field.type = this.fieldTypeRegistry.parseFieldType(<string>fieldInfo.type)
+    return field
   }
 }

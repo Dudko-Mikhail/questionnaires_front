@@ -34,7 +34,7 @@ export class UserService {
   }
 
   signUp(data: IUser): Observable<void> {
-    return this.http.post<string>(`${environment.apiUrl}/api/auth/sign-up`, data)
+    return this.http.post<void>(`${environment.apiUrl}/api/auth/sign-up`, data)
       .pipe(
         retry(3),
         catchError(this.handleError.bind(this))
@@ -49,6 +49,14 @@ export class UserService {
           this.errorService.handleAllErrors(err)
           return EMPTY
         })
+      )
+  }
+
+  changePassword(data: any): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/password`, data)
+      .pipe(
+        retry(3),
+        catchError(this.handleError.bind(this))
       )
   }
 

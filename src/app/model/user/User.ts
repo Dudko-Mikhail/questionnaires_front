@@ -9,7 +9,9 @@ export class User implements IUser {
 
   constructor(userInfo?: IUser) {
     if (userInfo) {
-      this.id = userInfo.id
+      if (userInfo.id) {
+        this.id = userInfo.id
+      }
       this.email = userInfo.email
       this.phoneNumber = userInfo.phoneNumber ? userInfo.phoneNumber : ''
       this.firstName = userInfo.firstName ? userInfo.firstName : ''
