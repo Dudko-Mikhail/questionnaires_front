@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Field} from "../../../model/Field";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FieldService} from "../../../service/field.service";
 import {Metadata, PagedResponse} from "../../../model/PagedResponse";
 import {ActivatedRoute, Params} from "@angular/router";
+import {AddEditFieldComponent} from "../../modal/add-edit-field/add-edit-field.component";
+import {ModalService} from "../../../service/modal.service";
+import {FieldResponse} from "../../../model/field/FieldResponse";
 
 @Component({
   selector: 'app-fields',
@@ -11,12 +13,14 @@ import {ActivatedRoute, Params} from "@angular/router";
 })
 export class FieldsComponent implements OnInit {
   path: string
-  fields: PagedResponse<Field> = new class implements PagedResponse<Field> {
-    content: Field[] = [];
+  fields: PagedResponse<FieldResponse> = new class implements PagedResponse<FieldResponse> {
+    content: FieldResponse[] = [];
     metadata: Metadata;
   }
+  @ViewChild('editFieldModal', {static: false}) editFieldComponent: AddEditFieldComponent
 
-  constructor(private fieldService: FieldService, private activeRoute: ActivatedRoute) {
+  constructor(private fieldService: FieldService, private activeRoute: ActivatedRoute,
+              private modalService: ModalService) {
   }
 
   ngOnInit(): void {
@@ -25,7 +29,7 @@ export class FieldsComponent implements OnInit {
       const pageParam: number = params['page']
       const sizeParam: number = params['size']
       this.fieldService.findSessionUserFields(pageParam, sizeParam)
-        .subscribe(((response: PagedResponse<Field>) => {
+        .subscribe(((response: PagedResponse<FieldResponse>) => {
             this.fields = response;
           })
         );
@@ -33,18 +37,16 @@ export class FieldsComponent implements OnInit {
   }
 
   deleteField(id: number): void {
-    this.fieldService.deleteFieldById(99)
-      .subscribe({
-        next: () => {
+    this.fieldService.deleteFieldById(id)
+      .subscribe(() => {
           window.location.reload()
-        },
-        error: (err) => alert(JSON.stringify(err))
-      })
+        }
+      )
   }
 
-  editField(id: number): void {
-    alert(id)
+  prepareEditComponent(field: FieldResponse): void {
+    this.editFieldComponent.fieldId = field.id
+    this.editFieldComponent.fillFormWithFieldData(field)
+    this.modalService.openModal('editField')
   }
-
-
 }
