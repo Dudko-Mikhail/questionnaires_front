@@ -53,11 +53,11 @@ export class PaginationComponent implements OnInit {
   }
 
   computeFirstElementIndex(): number {
-    return this.pageInfo.size * (this.pageInfo.page - 1) + 1
+    return this.pageInfo.size * (this.pageInfo.page - 1) + (this.pageInfo.numberOfElements != 0 ? 1 : 0)
   }
 
   computeLastElementIndex(): number {
-    return this.computeFirstElementIndex() + this.pageInfo.numberOfElements - 1
+    return this.pageInfo.size * (this.pageInfo.page - 1) + this.pageInfo.numberOfElements
   }
 
   showLeftThreeDots(): boolean {
