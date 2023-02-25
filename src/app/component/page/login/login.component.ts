@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, Subject} from "rxjs";
 import {UserService} from "../../../service/user.service";
+import {ModalService} from "../../../service/modal.service";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,6 @@ import {UserService} from "../../../service/user.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  private static NOTIFICATION_LIVE_TIME: number = 4000
   loginForm: FormGroup = this.formBuilder.group({
       email: ['', [Validators.email, Validators.maxLength(64), Validators.required]],
       password: ['', Validators.required],
@@ -22,8 +22,8 @@ export class LoginComponent {
   )
   showBadCredentialsMessage$: Subject<boolean> = new BehaviorSubject(false)
 
-  constructor(private auth: AuthenticationService, private userService: UserService,
-              private formBuilder: FormBuilder, private router: Router) {
+  constructor(private auth: AuthenticationService, private userService: UserService, private formBuilder: FormBuilder,
+              private router: Router, private modalService: ModalService) {
   }
 
   submit(): void {
@@ -39,7 +39,7 @@ export class LoginComponent {
         error: (err: HttpErrorResponse) => {
           if (err.status == 403) {
             if (err.error?.message) {
-              this.showAccountNotActivatedNotification()
+              this.modalService.openModal('continueRegistration')
               return
             }
             this.showBadCredentialsMessage()
@@ -50,11 +50,7 @@ export class LoginComponent {
 
   showBadCredentialsMessage(): void {
     this.showBadCredentialsMessage$.next(true)
-    setTimeout(() => this.showBadCredentialsMessage$.next(false), LoginComponent.NOTIFICATION_LIVE_TIME)
-  }
-
-  showAccountNotActivatedNotification() { // todo refactor this
-    document.getElementById('triggerModal')?.click()
+    setTimeout(() => this.showBadCredentialsMessage$.next(false), 5000)
   }
 
   get email() {

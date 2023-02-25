@@ -4,8 +4,9 @@
     <div class="fs-5 mb-3">Sign In</div>
   </div>
 
-  <div *ngIf="showBadCredentialsMessage$ | async" class="alert alert-danger fs-5 mb-2 text-center">
+  <div *ngIf="showBadCredentialsMessage$ | async" class="alert alert-danger alert-dismissible fs-5">
     Invalid login or password
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 
   <div class="mb-2">
@@ -34,7 +35,8 @@
                                                   class="fw-semibold text-decoration-none text-primary">Sign Up</a>
   </div>
 </form>
-<button id="triggerModal" class="btn btn-primary fs-6 d-none" data-bs-toggle="modal" data-bs-target="#continueRegistration">
-  todo refactor me
+<button id="triggerModal" class="btn btn-primary fs-6 d-none" data-bs-toggle="modal"
+        data-bs-target="#continueRegistration">
+  activate
 </button>
 <app-continue-registration [email]="this.email.value"></app-continue-registration>
