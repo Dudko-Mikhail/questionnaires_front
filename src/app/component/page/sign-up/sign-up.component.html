@@ -4,8 +4,9 @@
     <div class="fs-5 mb-3">Sign Up</div>
   </div>
 
-  <div *ngIf="showEmailIsNotUnique$ | async" class="alert alert-danger fs-5 mb-2 text-center">
-    This email: {{this.email}} is already taken
+  <div *ngIf="showEmailIsNotUnique$ | async" class="alert alert-danger alert-dismissible fs-5">
+    Email: {{this.email.value}} is already taken
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 
   <div class="mb-2">
@@ -67,3 +68,4 @@
                                                     class="fw-semibold text-decoration-none text-primary">Log In</a>
   </div>
 </form>
+<app-continue-registration [email]="this.email.value"></app-continue-registration>

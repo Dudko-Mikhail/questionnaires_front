@@ -1,8 +1,11 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordConfirmationValidator} from "../../../validator/password.confirmation.validator";
+import {passwordConfirmationValidator} from "../../../validator/password.validator";
 import {UserService} from "../../../service/user.service";
 import {BehaviorSubject, Subject} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ModalService} from "../../../service/modal.service";
+import {IUser} from "../../../model/user/IUser";
 
 @Component({
   selector: 'app-sing-up',
@@ -21,17 +24,38 @@ export class SignUpComponent {
 
   showEmailIsNotUnique$: Subject<boolean> = new BehaviorSubject(false)
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private modalService: ModalService) {
   }
 
-  submit(): void { // todo implement
+  submit(): void {
     if (this.signUpForm.invalid) {
       alert("The form is filled with invalid data")
       return
     }
-    this.userService.signUp(this.signUpForm.value)
-      .subscribe(() => {
+    this.userService.signUp({
+      email: this.email.value,
+      password: this.password.value,
+      phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null,
+      firstName: this.firstName.value ? this.firstName.value : null,
+      lastName: this.lastName.value ? this.lastName.value : null,
+    } as IUser)
+      .subscribe({
+        next: () => this.showContinueRegistrationModal(),
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 400) {
+            this.showEmailNotUniqueMessage()
+          }
+        }
       })
+  }
+
+  showContinueRegistrationModal(): void {
+    this.modalService.openModal('continueRegistration')
+  }
+
+  showEmailNotUniqueMessage() {
+    this.showEmailIsNotUnique$.next(true)
+    setTimeout(() => this.showEmailIsNotUnique$.next(false), 5000)
   }
 
   get email() {
