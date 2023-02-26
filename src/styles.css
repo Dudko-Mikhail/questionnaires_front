@@ -1,0 +1,9 @@
+.center {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.mxw-500 {
+  max-width: 500px;
+}
