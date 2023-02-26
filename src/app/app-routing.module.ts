@@ -9,10 +9,14 @@ import {QuestionnairesComponent} from "./component/page/questionnaires/questionn
 import {ChangePasswordComponent} from "./component/page/change-password/change-password.component";
 import {NotFoundComponent} from "./component/page/not-found/not-found.component";
 import {AuthGuard} from "./guard/auth.guard";
+import {QuestionnaireComponent} from "./component/page/questionnaire/questionnaire.component";
+import {CongratulationsComponent} from "./component/page/congratulations/congratulations.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/questionnaires', pathMatch: "full"},
   {path: 'questionnaires', component: QuestionnairesComponent, title: 'questionnaires'},
+  {path: 'questionnaires/:id', component: QuestionnaireComponent, title: 'questionnaire'},
+  {path: 'congratulations', component: CongratulationsComponent, title: 'congratulations'},
   {path: 'sign-up', component: SignUpComponent, title: 'sign-up'},
   {path: 'login', component: LoginComponent, title: 'login'},
   {path: 'responses', component: ResponsesComponent, title: 'responses', canActivate: [AuthGuard]},

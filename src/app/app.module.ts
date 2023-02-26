@@ -16,9 +16,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {httpInterceptorProviders} from "./interceptor";
 import {PaginationComponent} from './component/pagination/pagination.component';
-import {AddFieldComponent} from './component/modal/add-field/add-field.component';
+import {AddEditFieldComponent} from './component/modal/add-edit-field/add-edit-field.component';
 import {ContinueRegistrationComponent} from './component/modal/continue-registration/continue-registration.component';
 import {UnknownErrorComponent} from './component/unknown-error/unknown-error.component';
+import {QuestionnaireComponent} from './component/page/questionnaire/questionnaire.component';
+import {CongratulationsComponent} from './component/page/congratulations/congratulations.component';
 
 @NgModule({
   declarations: [
@@ -33,9 +35,11 @@ import {UnknownErrorComponent} from './component/unknown-error/unknown-error.com
     SignUpComponent,
     NavigationComponent,
     PaginationComponent,
-    AddFieldComponent,
+    AddEditFieldComponent,
     ContinueRegistrationComponent,
-    UnknownErrorComponent
+    UnknownErrorComponent,
+    QuestionnaireComponent,
+    CongratulationsComponent,
   ],
   imports: [
     BrowserModule,
