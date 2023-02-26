@@ -5,7 +5,7 @@ export class RadioButton extends FieldType {
     return true;
   }
 
-  override inputName(): string {
+  override inputType(): string {
     return "radio";
   }
 

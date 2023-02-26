@@ -1,7 +1,7 @@
 export abstract class FieldType {
   abstract hasOptions(): boolean
 
-  abstract inputName(): string
+  abstract inputType(): string
 
   abstract viewName(): string
 

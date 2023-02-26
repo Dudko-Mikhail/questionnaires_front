@@ -5,7 +5,7 @@ export class CheckBox extends FieldType {
     return false;
   }
 
-  override inputName(): string {
+  override inputType(): string {
     return "checkbox";
   }
 

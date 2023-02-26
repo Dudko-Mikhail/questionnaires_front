@@ -5,7 +5,7 @@ export class Combobox extends FieldType {
     return true
   }
 
-  override inputName(): string {
+  override inputType(): string {
     return "select";
   }
 
