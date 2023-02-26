@@ -48,7 +48,8 @@ export class AddEditFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.types = this.fieldTypeRegistry.apiFieldTypes
+    this.fieldService.findAllFieldTypes()
+      .subscribe((types: Set<FieldType>) => this.types = types)
     this.addFieldForm = this.formBuilder.group({
       label: ['', [Validators.required, Validators.maxLength(128)]],
       type: ['', Validators.required],
@@ -124,7 +125,7 @@ export class AddEditFieldComponent implements OnInit {
       options: this.options.value.length != 0 ? this.options.value : null,
       isRequired: this.required.value,
       isActive: this.active.value
-    } as FieldRequest;
+    } as FieldRequest
   }
 
   addOption(): void {

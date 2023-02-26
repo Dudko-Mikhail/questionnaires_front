@@ -26,10 +26,10 @@ export class ContinueRegistrationComponent {
 
   animateCountdown(duration: number): void {
     const timerSpan = document.createElement('span')
-    timerSpan.textContent = duration.toString();
+    timerSpan.textContent = duration.toString()
 
     this.timerButton.nativeElement?.classList.add('disabled')
-    this.timerButton.nativeElement?.appendChild(timerSpan);
+    this.timerButton.nativeElement?.appendChild(timerSpan)
     const timer = interval(1000)
       .pipe(take(duration))
 
@@ -45,7 +45,7 @@ export class ContinueRegistrationComponent {
   }
 
   tickAction(countdown: number, timerElement: HTMLElement): void {
-    countdown--;
+    countdown--
     timerElement.textContent = countdown.toString()
   }
 }

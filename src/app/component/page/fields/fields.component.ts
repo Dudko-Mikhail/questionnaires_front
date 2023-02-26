@@ -14,8 +14,8 @@ import {FieldResponse} from "../../../model/field/FieldResponse";
 export class FieldsComponent implements OnInit {
   path: string
   fields: PagedResponse<FieldResponse> = new class implements PagedResponse<FieldResponse> {
-    content: FieldResponse[] = [];
-    metadata: Metadata;
+    content: FieldResponse[] = []
+    metadata: Metadata
   }
   @ViewChild('editFieldModal', {static: false}) editFieldComponent: AddEditFieldComponent
 
@@ -30,9 +30,9 @@ export class FieldsComponent implements OnInit {
       const sizeParam: number = params['size']
       this.fieldService.findSessionUserFields(pageParam, sizeParam)
         .subscribe(((response: PagedResponse<FieldResponse>) => {
-            this.fields = response;
+            this.fields = response
           })
-        );
+        )
     })
   }
 
