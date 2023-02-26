@@ -8,25 +8,36 @@ import {EditProfileComponent} from "./component/page/edit-profile/edit-profile.c
 import {QuestionnairesComponent} from "./component/page/questionnaires/questionnaires.component";
 import {ChangePasswordComponent} from "./component/page/change-password/change-password.component";
 import {NotFoundComponent} from "./component/page/not-found/not-found.component";
-import {AuthGuard} from "./guard/auth.guard";
+import {AuthenticatedGuard} from "./guard/authenticated.guard";
 import {QuestionnaireComponent} from "./component/page/questionnaire/questionnaire.component";
 import {CongratulationsComponent} from "./component/page/congratulations/congratulations.component";
+import {Unauthenticated} from "./guard/unauthenticated.guard";
 
 const routes: Routes = [
   {path: '', redirectTo: '/questionnaires', pathMatch: "full"},
-  {path: 'questionnaires', component: QuestionnairesComponent, title: 'questionnaires'},
-  {path: 'questionnaires/:id', component: QuestionnaireComponent, title: 'questionnaire'},
-  {path: 'congratulations', component: CongratulationsComponent, title: 'congratulations'},
-  {path: 'sign-up', component: SignUpComponent, title: 'sign-up'},
-  {path: 'login', component: LoginComponent, title: 'login'},
-  {path: 'responses', component: ResponsesComponent, title: 'responses', canActivate: [AuthGuard]},
-  {path: 'fields', component: FieldsComponent, title: 'fields', canActivate: [AuthGuard]},
-  {path: 'profile/edit', component: EditProfileComponent, title: 'edit profile', canActivate: [AuthGuard]},
+  {path: 'questionnaires', component: QuestionnairesComponent, title: 'questionnaires', canActivate: [Unauthenticated]},
+  {
+    path: 'questionnaires/:id',
+    component: QuestionnaireComponent,
+    title: 'questionnaire',
+    canActivate: [Unauthenticated]
+  },
+  {
+    path: 'congratulations',
+    component: CongratulationsComponent,
+    title: 'congratulations',
+    canActivate: [Unauthenticated]
+  },
+  {path: 'sign-up', component: SignUpComponent, title: 'sign-up', canActivate: [Unauthenticated]},
+  {path: 'login', component: LoginComponent, title: 'login', canActivate: [Unauthenticated]},
+  {path: 'responses', component: ResponsesComponent, title: 'responses', canActivate: [AuthenticatedGuard]},
+  {path: 'fields', component: FieldsComponent, title: 'fields', canActivate: [AuthenticatedGuard]},
+  {path: 'profile/edit', component: EditProfileComponent, title: 'edit profile', canActivate: [AuthenticatedGuard]},
   {
     path: 'profile/change-password',
     component: ChangePasswordComponent,
     title: 'change password',
-    canActivate: [AuthGuard]
+    canActivate: [AuthenticatedGuard]
   },
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]
