@@ -2,21 +2,23 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {Credentials} from "../model/Credentials";
 import {environment} from "../../environments/environment";
-import {BehaviorSubject, catchError, Observable, retry, Subject, throwError} from "rxjs";
+import {BehaviorSubject, catchError, retry, Subject} from "rxjs";
 import {AuthenticationResponse} from "../model/AuthenticationResponse";
 import {ErrorService} from "./error.service";
+import {ServiceErrorHandler} from "./serviceErrorHandler";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService extends ServiceErrorHandler {
   private static TOKEN_KEY = 'token'
   private static USER_ID_KEY = 'id'
   private authentication$: Subject<boolean> = new BehaviorSubject(false)
   token: string | null = null
   userId: number | null = null
 
-  constructor(private http: HttpClient, private errorService: ErrorService) {
+  constructor(errorService: ErrorService, private http: HttpClient) {
+    super(errorService)
     this.sessionLogin()
     if (!this.isAuthenticated()) {
       this.rememberMeLogin()
@@ -28,7 +30,7 @@ export class AuthenticationService {
     this.http.post<AuthenticationResponse>(`${environment.apiUrl}/api/auth/login`, credentials)
       .pipe(
         retry(3),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
       .subscribe({
         next: (response: AuthenticationResponse) => {
@@ -49,11 +51,6 @@ export class AuthenticationService {
         }
       })
     return subject
-  }
-
-  private handleError(err: HttpErrorResponse): Observable<any> {
-    this.errorService.handleServerAndUnknownErrors(err)
-    return throwError(() => err)
   }
 
   rememberMeLogin(): void {

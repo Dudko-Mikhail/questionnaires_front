@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http'
-import {catchError, EMPTY, map, Observable, retry, throwError} from "rxjs";
+import {catchError, EMPTY, map, Observable, retry} from "rxjs";
 import {IUser} from "../model/user/IUser";
 import {environment} from "../../environments/environment";
 import {User} from "../model/user/User";
 import {AuthenticationService} from "./authentication.service";
 import {ErrorService} from "./error.service";
+import {ServiceErrorHandler} from "./serviceErrorHandler";
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
-
-  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService) {
+export class UserService extends ServiceErrorHandler {
+  constructor(errorService: ErrorService, private http: HttpClient, private auth: AuthenticationService) {
+    super(errorService)
   }
 
   findUserById(userId: number): Observable<User> {
@@ -20,7 +21,7 @@ export class UserService {
       .pipe(
         retry(3),
         map(this.mapUser),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
@@ -29,7 +30,7 @@ export class UserService {
       .pipe(
         retry(3),
         map(this.mapUser),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
@@ -37,7 +38,7 @@ export class UserService {
     return this.http.post<void>(`${environment.apiUrl}/api/auth/sign-up`, data)
       .pipe(
         retry(3),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
@@ -56,16 +57,11 @@ export class UserService {
     return this.http.post<void>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/password`, data)
       .pipe(
         retry(3),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
   private mapUser(userInfo: IUser): User {
     return new User(userInfo)
-  }
-
-  private handleError(err: HttpErrorResponse): Observable<any> {
-    this.errorService.handleServerAndUnknownErrors(err)
-    return throwError(() => err)
   }
 }

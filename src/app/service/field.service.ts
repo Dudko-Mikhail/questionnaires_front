@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {catchError, map, Observable, retry, throwError} from "rxjs";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {catchError, map, Observable, retry} from "rxjs";
 import {environment} from "../../environments/environment";
 import {AuthenticationService} from "./authentication.service";
 import {PagedResponse} from "../model/PagedResponse";
@@ -9,21 +9,24 @@ import {FieldRequest} from "../model/field/FieldRequest";
 import {FieldResponse} from "../model/field/FieldResponse";
 import {IField} from "../model/field/IField";
 import {FieldTypeRegistry} from "./field-type-registry.service";
+import {FieldType} from "../model/field/type/FieldType";
+import {ServiceErrorHandler} from "./serviceErrorHandler";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FieldService {
-  constructor(private http: HttpClient, private auth: AuthenticationService, private errorService: ErrorService,
+export class FieldService extends ServiceErrorHandler {
+  constructor(errorService: ErrorService, private http: HttpClient, private auth: AuthenticationService,
               private fieldTypeRegistry: FieldTypeRegistry) {
+    super(errorService)
   }
 
-  findAllUserFields(id: number): Observable<FieldResponse[]> { // todo add end-point
-    return this.http.get<IField>(`${environment.apiUrl}/users/{id}/fields`)
+  findAllUserFields(id: number): Observable<FieldResponse[]> {
+    return this.http.get<IField[]>(`${environment.apiUrl}/api/users/${id}/fields/all`)
       .pipe(
-        map(this.mapToFieldResponse.bind(this)),
         retry(3),
-        catchError(this.handleError.bind(this))
+        map(fields => fields.map(field => this.mapToFieldResponse(field))),
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
@@ -43,14 +46,41 @@ export class FieldService {
       params: params
     })
       .pipe(
+        retry(3),
         map(response => {
           return {
             content: response.content.map(this.mapToFieldResponse.bind(this)),
             metadata: response.metadata
           } as PagedResponse<FieldResponse>
         }),
+        catchError(this.handleAllErrors.bind(this))
+      )
+  }
+
+  public findAllFieldTypes(): Observable<Set<FieldType>> {
+    return this.http.get<string[]>(`${environment.apiUrl}/api/fields/types`)
+      .pipe(
         retry(3),
-        catchError(this.handleError.bind(this))
+        map(types => new Set(types.map(type => this.fieldTypeRegistry.parseFieldType(type)))),
+        catchError(this.handleAllErrors.bind(this))
+      )
+  }
+
+  addField(field: FieldRequest): Observable<FieldResponse> {
+    return this.http.post<IField>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, field)
+      .pipe(
+        retry(3),
+        map(this.mapToFieldResponse.bind(this)),
+        catchError(this.handleAllErrors.bind(this))
+      )
+  }
+
+  editField(id: number, field: FieldRequest): Observable<FieldResponse> {
+    return this.http.put<IField>(`${environment.apiUrl}/api/fields/${id}`, field)
+      .pipe(
+        retry(3),
+        map(this.mapToFieldResponse.bind(this)),
+        catchError(this.handleAllErrors.bind(this))
       )
   }
 
@@ -58,31 +88,8 @@ export class FieldService {
     return this.http.delete<void>(`${environment.apiUrl}/api/fields/${id}`)
       .pipe(
         retry(3),
-        catchError(this.handleError.bind(this))
+        catchError(this.handleAllErrors.bind(this))
       )
-  }
-
-  addField(field: FieldRequest): Observable<FieldResponse> {
-    return this.http.post<IField>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, field)
-      .pipe(
-        map(this.mapToFieldResponse.bind(this)),
-        retry(3),
-        catchError(this.handleError.bind(this))
-      )
-  }
-
-  editField(id: number, field: FieldRequest): Observable<FieldResponse> {
-    return this.http.put<IField>(`${environment.apiUrl}/api/fields/${id}`, field)
-      .pipe(
-        map(this.mapToFieldResponse.bind(this)),
-        retry(3),
-        catchError(this.handleError.bind(this))
-      )
-  }
-
-  private handleError(err: HttpErrorResponse): Observable<any> {
-    this.errorService.handleAllErrors(err)
-    return throwError(() => err)
   }
 
   private mapToFieldResponse(fieldInfo: IField): FieldResponse {
