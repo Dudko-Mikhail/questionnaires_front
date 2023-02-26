@@ -58,7 +58,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   get email() {
-    return this.editProfileForm.controls['email'];
+    return this.editProfileForm.controls['email']
   }
 
   get phoneNumber() {
