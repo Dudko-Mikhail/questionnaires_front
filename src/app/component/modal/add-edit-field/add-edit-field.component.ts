@@ -7,7 +7,7 @@ import {FieldTypeRegistry} from "../../../service/field-type-registry.service";
 import {FieldType} from "../../../model/field/type/FieldType";
 
 @Component({
-  selector: 'app-add-field',
+  selector: 'app-add-edit-field',
   templateUrl: './add-edit-field.component.html',
   styleUrls: ['./add-edit-field.component.css']
 })

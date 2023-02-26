@@ -19,20 +19,17 @@ export class FieldsComponent implements OnInit {
   }
   @ViewChild('editFieldModal', {static: false}) editFieldComponent: AddEditFieldComponent
 
-  constructor(private fieldService: FieldService, private activeRoute: ActivatedRoute,
+  constructor(private fieldService: FieldService, private activatedRoute: ActivatedRoute,
               private modalService: ModalService) {
   }
 
   ngOnInit(): void {
     this.path = window.location.pathname
-    this.activeRoute.queryParams.subscribe((params: Params) => {
+    this.activatedRoute.queryParams.subscribe((params: Params) => {
       const pageParam: number = params['page']
       const sizeParam: number = params['size']
       this.fieldService.findSessionUserFields(pageParam, sizeParam)
-        .subscribe(((response: PagedResponse<FieldResponse>) => {
-            this.fields = response
-          })
-        )
+        .subscribe((response: PagedResponse<FieldResponse>) => this.fields = response)
     })
   }
 

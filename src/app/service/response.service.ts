@@ -14,7 +14,8 @@ export class ResponseService extends ServiceErrorHandler {
   }
 
   sendResponse(id: number, answer: string): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/api/users/${id}/responses`, answer)
+    return this.http.post<void>(`${environment.apiUrl}/api/users/${id}/responses`,
+      {answer: answer})
       .pipe(
         retry(3),
         catchError(this.handleAllErrors.bind(this))

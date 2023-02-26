@@ -1,0 +1,9 @@
+.questionnaire {
+  cursor: pointer;
+}
+
+.questionnaire:hover {
+  background-color: var(--bs-primary);
+  color: white;
+  transition: 0.4s all ease;
+}

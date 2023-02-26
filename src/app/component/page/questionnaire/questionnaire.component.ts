@@ -13,7 +13,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class QuestionnaireComponent implements OnInit {
   private id: number
-  fields: FieldResponse[]
+  fields: FieldResponse[] = []
   questionnaireForm: FormGroup
 
   constructor(private filedService: FieldService, private activateRoute: ActivatedRoute, private router: Router,
