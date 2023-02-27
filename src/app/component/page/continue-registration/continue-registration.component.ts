@@ -33,7 +33,7 @@ export class ContinueRegistrationComponent implements OnInit, AfterViewInit {
   sendMessage(): void {
     this.userService.sendVerificationMessage(this.email)
       .subscribe(() => {
-         TimerAnimation.animateCountdown(60, this.timerButton.nativeElement)
+          TimerAnimation.animateCountdown(60, this.timerButton.nativeElement)
         }
       )
   }

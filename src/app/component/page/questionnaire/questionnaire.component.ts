@@ -47,7 +47,7 @@ export class QuestionnaireComponent implements OnInit {
   }
 
   submit(): void {
-    this.responseService.sendResponse(this.id, JSON.stringify(this.questionnaireForm.value))
+    this.responseService.sendResponse(this.id, this.questionnaireForm.value)
       .subscribe(() => this.router.navigate(['congratulations']))
   }
 

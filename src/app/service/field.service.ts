@@ -22,10 +22,12 @@ export class FieldService extends ServiceErrorHandler {
   }
 
   findAllUserFields(id: number): Observable<FieldResponse[]> {
-    return this.http.get<IField[]>(`${environment.apiUrl}/api/users/${id}/fields/all`)
+    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/users/${id}/fields`, {
+      params: new HttpParams().set('size', '1000')
+    })
       .pipe(
         retry(3),
-        map(fields => fields.map(field => this.mapToFieldResponse(field))),
+        map(fields => fields.content.map(field => this.mapToFieldResponse(field))),
         catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
