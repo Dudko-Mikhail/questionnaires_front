@@ -1,1 +1,22 @@
-<p>responses works!</p>
+<div class="border border-bottom-0 rounded px-3 py-3">
+  <div class="fw-bold fs-5">Responses</div>
+</div>
+<div class="border rounded px-3">
+  <table class="table table-striped mb-4">
+    <thead>
+    <tr>
+      <th *ngFor="let field of fields">{{field.label}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let response of responses.content" class="align-middle">
+      <td *ngFor="let field of fields">
+        {{response.answer[field.id] ? response.answer[field.id] : 'N/A'}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="mb-3">
+    <app-pagination *ngIf="responses.metadata" [pageInfo]="responses.metadata" [basePath]="path"></app-pagination>
+  </div>
+</div>

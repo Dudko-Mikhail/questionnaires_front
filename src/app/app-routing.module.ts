@@ -54,7 +54,7 @@ const routes: Routes = [
     title: 'reset password',
     canActivate: [Unauthenticated] // todo add special guard
   },
-  {path: 'continue-registration', component: ContinueRegistrationComponent, title: 'continue registration'},
+  {path: 'continue-registration', component: ContinueRegistrationComponent, title: 'continue registration'}, // todo add special guard
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]
 
