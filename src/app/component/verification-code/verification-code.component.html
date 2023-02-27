@@ -1,0 +1,23 @@
+<div class="mb-3">
+  <div *ngIf="showCodeIsInvalid$ | async" class="alert alert-danger alert-dismissible fw-semibold">
+    Verification code is invalid
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <div *ngIf="codeLabel" class="mb-2">{{codeLabel}}</div>
+  <form [formGroup]="verificationCodeForm" (ngSubmit)="verifyCode()">
+    <div class="mb-2">
+      <input class="form-control" type="text" placeholder="Verification code" formControlName="code"
+             [class.is-invalid]="code.touched && code.invalid"
+             [class.is-valid]="code.touched && code.valid">
+      <div class="invalid-feedback">
+        <div *ngIf="code.errors?.['required']">Verification code is required</div>
+        <div *ngIf="code.errors?.['maxlength']">
+          {{'Length must be equals 36. Actual: ' + code.errors?.['maxlength']['actualLength']}}
+        </div>
+        <div *ngIf="code.errors?.['minlength'] || code.errors?.['minlength']">
+          {{'Length must be equals 36. Actual: ' + code.errors?.['minlength']['actualLength']}}
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

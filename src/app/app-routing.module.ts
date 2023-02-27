@@ -12,6 +12,9 @@ import {AuthenticatedGuard} from "./guard/authenticated.guard";
 import {QuestionnaireComponent} from "./component/page/questionnaire/questionnaire.component";
 import {CongratulationsComponent} from "./component/page/congratulations/congratulations.component";
 import {Unauthenticated} from "./guard/unauthenticated.guard";
+import {ForgotPasswordComponent} from "./component/page/forget-password/forgot-password.component";
+import {ResetPasswordComponent} from "./component/page/reset-password/reset-password.component";
+import {ContinueRegistrationComponent} from "./component/page/continue-registration/continue-registration.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/questionnaires', pathMatch: "full"},
@@ -26,7 +29,7 @@ const routes: Routes = [
     path: 'congratulations',
     component: CongratulationsComponent,
     title: 'congratulations',
-    canActivate: [Unauthenticated]
+    canActivate: [Unauthenticated] // todo add special guard
   },
   {path: 'sign-up', component: SignUpComponent, title: 'sign-up', canActivate: [Unauthenticated]},
   {path: 'login', component: LoginComponent, title: 'login', canActivate: [Unauthenticated]},
@@ -39,6 +42,19 @@ const routes: Routes = [
     title: 'change password',
     canActivate: [AuthenticatedGuard]
   },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    title: 'forgot password',
+    canActivate: [Unauthenticated]
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    title: 'reset password',
+    canActivate: [Unauthenticated] // todo add special guard
+  },
+  {path: 'continue-registration', component: ContinueRegistrationComponent, title: 'continue registration'},
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]
 

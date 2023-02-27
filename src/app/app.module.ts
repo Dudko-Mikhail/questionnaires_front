@@ -17,10 +17,13 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {httpInterceptorProviders} from "./interceptor";
 import {PaginationComponent} from './component/pagination/pagination.component';
 import {AddEditFieldComponent} from './component/modal/add-edit-field/add-edit-field.component';
-import {ContinueRegistrationComponent} from './component/modal/continue-registration/continue-registration.component';
+import {ContinueRegistrationComponent} from './component/page/continue-registration/continue-registration.component';
 import {UnknownErrorComponent} from './component/unknown-error/unknown-error.component';
 import {QuestionnaireComponent} from './component/page/questionnaire/questionnaire.component';
 import {CongratulationsComponent} from './component/page/congratulations/congratulations.component';
+import {ForgotPasswordComponent} from './component/page/forget-password/forgot-password.component';
+import {ResetPasswordComponent} from './component/page/reset-password/reset-password.component';
+import {VerificationCodeComponent} from './component/verification-code/verification-code.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import {CongratulationsComponent} from './component/page/congratulations/congrat
     UnknownErrorComponent,
     QuestionnaireComponent,
     CongratulationsComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    VerificationCodeComponent,
   ],
   imports: [
     BrowserModule,

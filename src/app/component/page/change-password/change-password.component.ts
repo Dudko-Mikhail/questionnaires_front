@@ -4,6 +4,7 @@ import {currentPasswordEqualsNewValidator, passwordConfirmationValidator} from "
 import {UserService} from "../../../service/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, Subject} from "rxjs";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-change-password',
@@ -21,16 +22,14 @@ export class ChangePasswordComponent {
       currentPasswordEqualsNewValidator()
     ]
   })
-
   showInvalidCurrentPasswordMessage$: Subject<boolean> = new BehaviorSubject(false)
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
-
   }
 
   submit(): void {
     if (this.changePasswordForm.invalid) {
-      alert("The form is filled with invalid data")
+      alert('The form is filled with invalid data')
       return
     }
     this.userService.changePassword({
@@ -52,7 +51,7 @@ export class ChangePasswordComponent {
 
   showInvalidCurrentPasswordMessage(): void {
     this.showInvalidCurrentPasswordMessage$.next(true)
-    setTimeout(() => this.showInvalidCurrentPasswordMessage$.next(false), 5000)
+    setTimeout(() => this.showInvalidCurrentPasswordMessage$.next(false), environment.notificationLiveTime)
   }
 
   get currentPassword() {

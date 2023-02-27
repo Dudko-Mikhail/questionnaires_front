@@ -39,7 +39,7 @@ export class EditProfileComponent implements OnInit {
 
   submit(): void { // todo error handling
     if (this.editProfileForm.invalid) {
-      alert("The form is filled with invalid data")
+      alert('The form is filled with invalid data')
       return
     }
     this.userService.editProfile(this.editProfileForm.value)

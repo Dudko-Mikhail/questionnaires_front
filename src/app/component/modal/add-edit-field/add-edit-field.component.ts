@@ -80,7 +80,7 @@ export class AddEditFieldComponent implements OnInit {
 
   submit(): void {
     if (this.addFieldForm.invalid) {
-      alert("The form is filled with invalid data")
+      alert('The form is filled with invalid data')
       return
     }
     if (this.isAddField) {
