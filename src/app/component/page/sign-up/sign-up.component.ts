@@ -4,8 +4,9 @@ import {passwordConfirmationValidator} from "../../../validator/password.validat
 import {UserService} from "../../../service/user.service";
 import {BehaviorSubject, Subject} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
-import {ModalService} from "../../../service/modal.service";
 import {IUser} from "../../../model/user/IUser";
+import {environment} from "../../../../environments/environment";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sing-up',
@@ -24,23 +25,27 @@ export class SignUpComponent {
 
   showEmailIsNotUnique$: Subject<boolean> = new BehaviorSubject(false)
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private modalService: ModalService) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
   }
 
   submit(): void {
     if (this.signUpForm.invalid) {
-      alert("The form is filled with invalid data")
+      alert('The form is filled with invalid data')
       return
     }
+    const email: string = this.email.value
     this.userService.signUp({
-      email: this.email.value,
+      email: email,
       password: this.password.value,
       phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null,
       firstName: this.firstName.value ? this.firstName.value : null,
       lastName: this.lastName.value ? this.lastName.value : null,
     } as IUser)
       .subscribe({
-        next: () => this.showContinueRegistrationModal(),
+        next: () => {
+          sessionStorage.setItem(environment.continueRegistrationEmailStorageKey, email)
+          this.router.navigate(['continue-registration'])
+        },
         error: (err: HttpErrorResponse) => {
           if (err.status === 400) {
             this.showEmailNotUniqueMessage()
@@ -49,13 +54,9 @@ export class SignUpComponent {
       })
   }
 
-  showContinueRegistrationModal(): void {
-    this.modalService.openModal('continueRegistration')
-  }
-
   showEmailNotUniqueMessage() {
     this.showEmailIsNotUnique$.next(true)
-    setTimeout(() => this.showEmailIsNotUnique$.next(false), 5000)
+    setTimeout(() => this.showEmailIsNotUnique$.next(false), environment.notificationLiveTime)
   }
 
   get email() {
