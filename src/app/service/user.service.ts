@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http'
-import {catchError, EMPTY, map, Observable, retry} from "rxjs";
+import {HttpClient} from '@angular/common/http'
+import {catchError, map, Observable, retry} from "rxjs";
 import {IUser} from "../model/user/IUser";
 import {environment} from "../../environments/environment";
 import {User} from "../model/user/User";
 import {AuthenticationService} from "./authentication.service";
 import {ErrorService} from "./error.service";
 import {ServiceErrorHandler} from "./serviceErrorHandler";
+import {VerificationRequest} from "../model/VerificationRequest";
+import {PasswordRecoveryRequest} from "../model/PasswordRecoveryRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -46,10 +48,15 @@ export class UserService extends ServiceErrorHandler {
     return this.http.post<void>(`${environment.apiUrl}/api/users/verification-message`, {email: email})
       .pipe(
         retry(3),
-        catchError((err: HttpErrorResponse) => {
-          this.errorService.handleAllErrors(err)
-          return EMPTY
-        })
+        catchError(this.handleAllErrors.bind(this))
+      )
+  }
+
+  sendResetPasswordMessage(email: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/api/users/reset-password-message`, {email: email})
+      .pipe(
+        retry(3),
+        catchError(this.handleUnknownAndServerErrors.bind(this))
       )
   }
 
@@ -58,6 +65,30 @@ export class UserService extends ServiceErrorHandler {
       .pipe(
         retry(3),
         catchError(this.handleUnknownAndServerErrors.bind(this))
+      )
+  }
+
+  resetPassword(passwordRecoveryRequest: PasswordRecoveryRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/api/users/password/recovery`, passwordRecoveryRequest)
+      .pipe(
+        retry(3),
+        catchError(this.handleUnknownAndServerErrors.bind(this))
+      )
+  }
+
+  validateVerificationCode(verificationRequest: VerificationRequest): Observable<boolean> {
+    return this.http.post<boolean>(`${environment.apiUrl}/api/users/verification-code`, verificationRequest)
+      .pipe(
+        retry(3),
+        catchError(this.handleAllErrors.bind(this))
+      )
+  }
+
+  activateAccount(verificationRequest: VerificationRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/api/users/email/verification`, verificationRequest)
+      .pipe(
+        retry(3),
+        catchError(this.handleAllErrors.bind(this))
       )
   }
 
