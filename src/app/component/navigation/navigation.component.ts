@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../service/authentication.service";
 import {User} from "../../model/user/User";
 import {UserService} from "../../service/user.service";
-import {ReplaySubject, Subject} from "rxjs";
+import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 
 @Component({
   selector: 'app-navigation',
@@ -11,18 +11,9 @@ import {ReplaySubject, Subject} from "rxjs";
 })
 export class NavigationComponent implements OnInit {
   private static DEFAULT_PROFILE_MENU_TITLE = 'Profile Menu'
-  profileMenuTitle$: Subject<string> = new ReplaySubject(1)
+  profileMenuTitle$: Subject<string> = new BehaviorSubject(NavigationComponent.DEFAULT_PROFILE_MENU_TITLE)
 
   constructor(private auth: AuthenticationService, private userService: UserService) {
-    if (!this.isAuthenticated()) {
-      this.profileMenuTitle$.next(NavigationComponent.DEFAULT_PROFILE_MENU_TITLE)
-      return
-    }
-    const userId = this.auth.getUserId()
-    this.userService.findUserById(userId)
-      .subscribe((user: User) => {
-        this.profileMenuTitle$.next(user.getFullNameOrEmail())
-      })
   }
 
   ngOnInit(): void {
