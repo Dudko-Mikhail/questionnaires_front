@@ -3,5 +3,6 @@ export const environment = {
   notificationLiveTime: 5000,
   resetPasswordVerificationCodeStorageKey: 'rpvck',
   resetPasswordEmailStorageKey: 'rpek',
-  continueRegistrationEmailStorageKey: 'crek'
+  continueRegistrationEmailStorageKey: 'crek',
+  congratulationPermissionStorageKey: 'cpk'
 };

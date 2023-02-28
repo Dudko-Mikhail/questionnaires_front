@@ -5,6 +5,7 @@ import {FieldResponse} from "../../../model/field/FieldResponse";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResponseService} from "../../../service/response.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-questionnaire',
@@ -48,7 +49,10 @@ export class QuestionnaireComponent implements OnInit {
 
   submit(): void {
     this.responseService.sendResponse(this.id, this.questionnaireForm.value)
-      .subscribe(() => this.router.navigate(['congratulations']))
+      .subscribe(() => {
+        sessionStorage.setItem(environment.congratulationPermissionStorageKey, 'ok')
+        this.router.navigate(['congratulations'])
+      })
   }
 
   reset(): void {
