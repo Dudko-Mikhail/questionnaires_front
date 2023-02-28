@@ -5,6 +5,7 @@ import {UserService} from "../../../service/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, Subject} from "rxjs";
 import {environment} from "../../../../environments/environment";
+import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-change-password',
@@ -22,6 +23,7 @@ export class ChangePasswordComponent {
       currentPasswordEqualsNewValidator()
     ]
   })
+  showSuccessMessage$: Subject<boolean> = new BehaviorSubject(false)
   showInvalidCurrentPasswordMessage$: Subject<boolean> = new BehaviorSubject(false)
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
@@ -38,6 +40,8 @@ export class ChangePasswordComponent {
     })
       .subscribe({
         next: () => {
+          this.changePasswordForm.reset()
+          NotificationAnimation.showNotification(this.showSuccessMessage$, 3000)
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === 400) {

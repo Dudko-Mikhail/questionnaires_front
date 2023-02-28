@@ -40,7 +40,7 @@ export class ForgotPasswordComponent {
           this.isMessageSent$.next(true)
         },
         error: (err: HttpErrorResponse) => {
-          if (err.status === 400) {
+          if (err.status === 404) {
             this.showEmailIsInvalid$.next(true)
             setTimeout(() => this.showEmailIsInvalid$.next(false), environment.notificationLiveTime)
           }

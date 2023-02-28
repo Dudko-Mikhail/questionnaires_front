@@ -1,31 +1,55 @@
 <form *ngIf="fields.length !== 0; else goBack" [formGroup]="questionnaireForm" (ngSubmit)="submit()"
       class="border center rounded-3 px-5 py-3 mxw-500">
   <div *ngFor="let field of fields" class="mb-3">
-    <label class="form-label">{{field.label}}</label>
-    <input *ngIf="!field.type.hasOptions(); else select" formControlName="{{field.id}}"
-           class="form-control" type="{{field.type.inputType()}}"
-           [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
-           [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
-    <div class="invalid-feedback" *ngIf="questionnaireForm.controls[field.id].invalid">
-      <div *ngIf="questionnaireForm.controls[field.id].errors?.['required']">{{field.label}} is required</div>
-    </div>
-    <ng-template #select>
-      <select *ngIf="field.type.inputType() === 'select'; else radio" class="form-select" formControlName="{{field.id}}"
-              [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
-              [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
-        <option value="">Choose Option</option>
-        <option value="{{option}}" *ngFor="let option of field.options">{{option}}</option>
-      </select>
-    </ng-template>
-    <ng-template #radio>
-      <div class="form-check" *ngFor="let option of field.options"
-           [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid">
-        <input class="form-check-input" type="radio" value="{{option}}" formControlName="{{field.id}}"
+    <div [ngSwitch]="field.type.inputType()">
+      <div *ngSwitchCase="'radio'">
+        <label class="form-label" [class.required-asterisk]="field.isRequired">{{field.label}}</label>
+        <div class="form-check" *ngFor="let option of field.options"
+             [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid">
+          <input class="form-check-input" type="radio" value="{{option}}" formControlName="{{field.id}}"
+                 [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
+                 [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
+          <label class="form-check-label text-black">{{option}}</label>
+        </div>
+        <div class="invalid-feedback">
+          <div *ngIf="questionnaireForm.controls[field.id].errors?.['required']">{{field.label}} is required</div>
+        </div>
+      </div>
+      <div *ngSwitchCase="'select'">
+        <label class="form-label" [class.required-asterisk]="field.isRequired">{{field.label}}</label>
+        <select class="form-select" formControlName="{{field.id}}"
+                [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
+                [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
+          <option value="">Choose Option</option>
+          <option value="{{option}}" *ngFor="let option of field.options">{{option}}</option>
+        </select>
+        <div class="invalid-feedback">
+          <div *ngIf="questionnaireForm.controls[field.id].errors?.['required']"
+               [class.required-asterisk]="field.isRequired">{{field.label}} is required</div>
+        </div>
+      </div>
+      <div *ngSwitchCase="'checkbox'">
+        <div class="form-check"
+             [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid">
+          <input class="form-check-input" type="checkbox" formControlName="{{field.id}}"
+                 [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
+                 [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
+          <label class="form-check-label text-black" [class.required-asterisk]="field.isRequired">{{field.label}}</label>
+        </div>
+        <div class="invalid-feedback">
+          <div *ngIf="questionnaireForm.controls[field.id].errors?.['required']">{{field.label}} is required</div>
+        </div>
+      </div>
+      <div *ngSwitchDefault>
+        <label class="form-label" [class.required-asterisk]="field.isRequired">{{field.label}}</label>
+        <input formControlName="{{field.id}}" class="form-control" type="{{field.type.inputType()}}"
                [class.is-invalid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].invalid"
                [class.is-valid]="questionnaireForm.controls[field.id].touched && questionnaireForm.controls[field.id].valid">
-        <label class="form-check-label text-black">{{option}}</label>
+        <div class="invalid-feedback">
+          <div *ngIf="questionnaireForm.controls[field.id].errors?.['required']">{{field.label}} is required</div>
+        </div>
       </div>
-    </ng-template>
+    </div>
   </div>
   <div class="d-flex mt-4">
     <button [disabled]="questionnaireForm.invalid" type="submit" class="btn btn-primary col-3 me-2">Submit</button>

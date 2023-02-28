@@ -13,7 +13,7 @@
     <input class="form-control" formControlName="email" type="email" placeholder="Email"
            [class.is-invalid]="email.touched && email.invalid"
            [class.is-valid]="email.touched && email.valid">
-    <div class="invalid-feedback" *ngIf="email.touched && email.invalid">
+    <div class="invalid-feedback">
       <div *ngIf="email.errors?.['email']">Invalid email format</div>
       <div *ngIf="email.errors?.['maxlength']">
         {{'Length should be less than ' + email.errors?.['maxlength']['requiredLength']}}
@@ -53,7 +53,7 @@
     <input class="form-control" formControlName="phoneNumber" type="tel" placeholder="Phone Number"
            [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"
            [class.is-valid]="phoneNumber.dirty && phoneNumber.valid">
-    <div class="invalid-feedback" *ngIf="phoneNumber.touched && phoneNumber.invalid">
+    <div class="invalid-feedback">
       <div *ngIf="phoneNumber.errors?.['maxlength']">
         {{'Length should be less than ' + phoneNumber.errors?.['maxlength']['requiredLength']}}
       </div>
