@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, Subject} from "rxjs";
 import {UserService} from "../../../service/user.service";
 import {environment} from "../../../../environments/environment";
+import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-login',
@@ -42,7 +43,7 @@ export class LoginComponent {
             if (err.error?.message) {
               this.disabledAccountAction(email)
             }
-            this.showBadCredentialsMessage()
+            NotificationAnimation.showNotification(this.showBadCredentialsMessage$)
           }
         }
       })
@@ -54,11 +55,6 @@ export class LoginComponent {
         sessionStorage.setItem(environment.continueRegistrationEmailStorageKey, email)
         this.router.navigate(['continue-registration'])
       })
-  }
-
-  showBadCredentialsMessage(): void {
-    this.showBadCredentialsMessage$.next(true)
-    setTimeout(() => this.showBadCredentialsMessage$.next(false), environment.notificationLiveTime)
   }
 
   get email() {

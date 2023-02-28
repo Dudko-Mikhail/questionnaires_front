@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {IUser} from "../../../model/user/IUser";
 import {environment} from "../../../../environments/environment";
 import {Router} from "@angular/router";
+import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-sing-up',
@@ -48,15 +49,10 @@ export class SignUpComponent {
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === 400) {
-            this.showEmailNotUniqueMessage()
+            NotificationAnimation.showNotification(this.showEmailIsNotUnique$)
           }
         }
       })
-  }
-
-  showEmailNotUniqueMessage() {
-    this.showEmailIsNotUnique$.next(true)
-    setTimeout(() => this.showEmailIsNotUnique$.next(false), environment.notificationLiveTime)
   }
 
   get email() {

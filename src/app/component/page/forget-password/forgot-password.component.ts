@@ -6,6 +6,7 @@ import {TimerAnimation} from "../../../util/TimerAnimation";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {Router} from "@angular/router";
+import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-forgot-password',
@@ -41,8 +42,7 @@ export class ForgotPasswordComponent {
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === 404) {
-            this.showEmailIsInvalid$.next(true)
-            setTimeout(() => this.showEmailIsInvalid$.next(false), environment.notificationLiveTime)
+            NotificationAnimation.showNotification(this.showEmailIsInvalid$)
           }
         }
       })

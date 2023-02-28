@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../service/user.service";
-import {environment} from "../../../environments/environment";
 import {VerificationRequest} from "../../model/VerificationRequest";
+import {NotificationAnimation} from "../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-verification-code',
@@ -49,8 +49,7 @@ export class VerificationCodeComponent implements OnInit {
     const size = this.usedCodes.size;
     this.usedCodes.add(this.code.value)
     if (this.usedCodes.size === size) {
-      this.showCodeIsInvalid$.next(true)
-      setTimeout(() => this.showCodeIsInvalid$.next(false), environment.notificationLiveTime)
+      NotificationAnimation.showNotification(this.showCodeIsInvalid$)
       return
     }
     this.userService.validateVerificationCode(new VerificationRequest(this.email, this.code.value))
@@ -58,8 +57,7 @@ export class VerificationCodeComponent implements OnInit {
           if (isValid) {
             this.successAction?.(this.code.value)
           } else {
-            this.showCodeIsInvalid$.next(true)
-            setTimeout(() => this.showCodeIsInvalid$.next(false), environment.notificationLiveTime)
+            NotificationAnimation.showNotification(this.showCodeIsInvalid$)
           }
         }
       )

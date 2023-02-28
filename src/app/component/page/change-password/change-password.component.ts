@@ -4,7 +4,6 @@ import {currentPasswordEqualsNewValidator, passwordConfirmationValidator} from "
 import {UserService} from "../../../service/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, Subject} from "rxjs";
-import {environment} from "../../../../environments/environment";
 import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
