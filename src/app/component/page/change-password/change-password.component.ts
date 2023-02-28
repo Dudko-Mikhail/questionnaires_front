@@ -41,21 +41,18 @@ export class ChangePasswordComponent {
       .subscribe({
         next: () => {
           this.changePasswordForm.reset()
+          this.showInvalidCurrentPasswordMessage$.next(false)
           NotificationAnimation.showNotification(this.showSuccessMessage$, 3000)
         },
         error: (err: HttpErrorResponse) => {
           if (err.status === 400) {
-            this.currentPassword.setValue('')
-            this.showInvalidCurrentPasswordMessage()
+            this.currentPassword.reset()
+            this.showSuccessMessage$.next(false)
+            NotificationAnimation.showNotification(this.showInvalidCurrentPasswordMessage$)
           }
         }
       })
 
-  }
-
-  showInvalidCurrentPasswordMessage(): void {
-    this.showInvalidCurrentPasswordMessage$.next(true)
-    setTimeout(() => this.showInvalidCurrentPasswordMessage$.next(false), environment.notificationLiveTime)
   }
 
   get currentPassword() {
