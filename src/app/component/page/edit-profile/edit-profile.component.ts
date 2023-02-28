@@ -3,6 +3,11 @@ import {AuthenticationService} from "../../../service/authentication.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../../../model/user/User";
 import {UserService} from "../../../service/user.service";
+import {EditProfileRequest} from "../../../model/EditProfileRequest";
+import {HttpErrorResponse} from "@angular/common/http";
+import {BehaviorSubject, Subject} from "rxjs";
+import {environment} from "../../../../environments/environment";
+import {NotificationAnimation} from "../../../util/NotificationAnimation";
 
 @Component({
   selector: 'app-edit-profile',
@@ -17,8 +22,10 @@ export class EditProfileComponent implements OnInit {
       phoneNumber: ['', [Validators.maxLength(32), Validators.minLength(3)]]
     }
   )
+  showEmailIsNotUniqueMessage$: Subject<boolean> = new BehaviorSubject(false)
 
-  constructor(private auth: AuthenticationService, private userService: UserService, private formBuilder: FormBuilder) {
+  constructor(private auth: AuthenticationService, private userService: UserService,
+              private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -37,14 +44,26 @@ export class EditProfileComponent implements OnInit {
     this.phoneNumber.setValue(user.phoneNumber)
   }
 
-  submit(): void { // todo error handling
+  submit(): void {
     if (this.editProfileForm.invalid) {
       alert('The form is filled with invalid data')
       return
     }
-    this.userService.editProfile(this.editProfileForm.value)
-      .subscribe((user: User) => {
-          window.location.reload()
+    this.userService.editProfile({
+      email: this.email.value,
+      firstName: this.firstName.value ? this.firstName.value : null,
+      lastName: this.lastName.value ? this.lastName.value : null,
+      phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null
+    } as EditProfileRequest)
+      .subscribe({
+          next: () => {
+            window.location.reload()
+          },
+          error: (err: HttpErrorResponse) => {
+            if (err.status === 400) {
+              NotificationAnimation.showNotification(this.showEmailIsNotUniqueMessage$)
+            }
+          }
         }
       )
   }

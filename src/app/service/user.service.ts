@@ -9,6 +9,7 @@ import {ErrorService} from "./error.service";
 import {ServiceErrorHandler} from "./serviceErrorHandler";
 import {VerificationRequest} from "../model/VerificationRequest";
 import {PasswordRecoveryRequest} from "../model/PasswordRecoveryRequest";
+import {EditProfileRequest} from "../model/EditProfileRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,8 @@ export class UserService extends ServiceErrorHandler {
       )
   }
 
-  editProfile(data: any): Observable<User> {
-    return this.http.put<IUser>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}`, data)
+  editProfile(editProfileRequest: EditProfileRequest): Observable<User> {
+    return this.http.put<IUser>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}`, editProfileRequest)
       .pipe(
         retry(3),
         map(this.mapUser),

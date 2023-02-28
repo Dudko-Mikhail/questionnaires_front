@@ -1,10 +1,16 @@
-<form class="border rounded-3 py-3" [formGroup]="editProfileForm" (ngSubmit)="submit()">
+<form class="border rounded-3 py-3 mxw-500 center" [formGroup]="editProfileForm" (ngSubmit)="submit()">
   <div class="ps-3">
     <div class="fs-5 mb-3 fw-semibold">Edit Profile</div>
   </div>
   <hr class="mb-6"/>
+
   <div class="px-5">
     <div class="mb-3">
+      <div *ngIf="showEmailIsNotUniqueMessage$ | async" class="alert alert-danger alert-dismissible fw-semibold">
+        Email is already taken
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
       <label class="form-label">First Name</label>
       <input class="form-control" type="text" formControlName="firstName"
              [class.is-invalid]="firstName.dirty && firstName.invalid"
@@ -23,11 +29,11 @@
       </div>
     </div>
     <div class="mb-3">
-      <label class="form-label">Email</label>
+      <label class="form-label required-asterisk">Email</label>
       <input class="form-control" type="email" formControlName="email"
              [class.is-invalid]="email.touched && email.invalid"
              [class.is-valid]="email.touched && email.valid">
-      <div class="invalid-feedback" *ngIf="email.touched && email.invalid">
+      <div class="invalid-feedback">
         <div *ngIf="email.errors?.['email']">Invalid email format</div>
         <div *ngIf="email.errors?.['maxlength']">
           {{'Length should be less than ' + email.errors?.['maxlength']['requiredLength']}}
@@ -40,7 +46,7 @@
       <input class="form-control" type="tel" formControlName="phoneNumber"
              [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"
              [class.is-valid]="phoneNumber.dirty && phoneNumber.valid">
-      <div class="invalid-feedback" *ngIf="phoneNumber.touched && phoneNumber.invalid">
+      <div class="invalid-feedback">
         <div *ngIf="phoneNumber.errors?.['maxlength']">
           {{'Length should be less than ' + phoneNumber.errors?.['maxlength']['requiredLength']}}
         </div>
