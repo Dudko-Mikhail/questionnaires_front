@@ -23,6 +23,6 @@ export class CongratulationsComponent implements OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-   sessionStorage.removeItem(environment.congratulationPermissionStorageKey)
+    sessionStorage.removeItem(environment.congratulationPermissionStorageKey)
   }
 }

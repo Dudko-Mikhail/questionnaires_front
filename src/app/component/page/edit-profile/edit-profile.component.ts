@@ -23,6 +23,7 @@ export class EditProfileComponent implements OnInit {
     }
   )
   showEmailIsNotUniqueMessage$: Subject<boolean> = new BehaviorSubject(false)
+  emailSnapshot: string
 
   constructor(private auth: AuthenticationService, private userService: UserService,
               private formBuilder: FormBuilder) {
@@ -50,8 +51,9 @@ export class EditProfileComponent implements OnInit {
       alert('The form is filled with invalid data')
       return
     }
+    this.emailSnapshot = this.email.value
     this.userService.editProfile({
-      email: this.email.value,
+      email: this.emailSnapshot,
       firstName: this.firstName.value ? this.firstName.value : null,
       lastName: this.lastName.value ? this.lastName.value : null,
       phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null
