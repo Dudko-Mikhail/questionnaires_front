@@ -14,6 +14,7 @@ import {NotificationAnimation} from "../../../util/NotificationAnimation";
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
+  private initialEmail: string
   editProfileForm: FormGroup = this.formBuilder.group({
       firstName: ['', Validators.maxLength(32)],
       lastName: ['', Validators.maxLength(32)],
@@ -31,6 +32,7 @@ export class EditProfileComponent implements OnInit {
     const id = this.auth.getUserId()
     this.userService.findUserById(id)
       .subscribe((user: User) => {
+        this.initialEmail = user.email
         this.fillFormWithUserData(user)
       })
 
@@ -55,7 +57,10 @@ export class EditProfileComponent implements OnInit {
       phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null
     } as EditProfileRequest)
       .subscribe({
-          next: () => {
+          next: (user: User) => {
+            if (this.initialEmail !== user.email) {
+              this.auth.logOut()
+            }
             window.location.reload()
           },
           error: (err: HttpErrorResponse) => {
