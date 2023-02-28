@@ -66,10 +66,6 @@ export class AddEditFieldComponent implements OnInit {
       .subscribe(value => {
         if (this.hasOptions(value)) {
           this.options.setValidators(Validators.required)
-          if (this.options.length === 0) {
-            this.newOption.addValidators(Validators.required)
-            this.newOption.updateValueAndValidity()
-          }
         } else {
           this.options.clear()
           this.options.clearValidators()

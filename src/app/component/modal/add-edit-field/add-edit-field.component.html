@@ -8,12 +8,12 @@
       <form [formGroup]="addFieldForm" (ngSubmit)="submit()">
         <div class="modal-body px-2">
           <div class="row mb-3">
-            <label class="col-form-label col-3 text-end">Label</label>
+            <label class="col-form-label col-3 text-end required-asterisk">Label</label>
             <div class="col-8">
               <input class="form-control" formControlName="label" type="text"
                      [class.is-invalid]="label.touched && label.invalid"
                      [class.is-valid]="label.touched && label.valid">
-              <div class="invalid-feedback" *ngIf="label.invalid && label.touched">
+              <div class="invalid-feedback">
                 <div *ngIf="label.errors?.['required']">Label is required</div>
                 <div *ngIf="label.errors?.['maxlength']">
                   {{'Length should be less than ' + label.errors?.['maxlength']['requiredLength']}}
@@ -23,7 +23,7 @@
           </div>
 
           <div class="row mb-3">
-            <label class="col-form-label col-3 text-end">Type</label>
+            <label class="col-form-label col-3 text-end required-asterisk">Type</label>
             <div class="col-8">
               <select class="form-select" formControlName="type"
                       [class.is-invalid]="type.touched && type.invalid"
@@ -38,7 +38,7 @@
 
           <div class="mb-3">
             <div class="row" *ngIf="hasOptions(type.value)">
-              <label class="col-form-label col-3 text-end">Options</label>
+              <label class="col-form-label col-3 text-end required-asterisk">Options</label>
               <div class="col-8" formArrayName="options">
                 <div class="mb-2" *ngFor="let option of options.controls; let i = index">
                   <input class="form-control mb-1" [formControlName]="i" (change)="removeIfEmpty($event, i)"
@@ -51,16 +51,16 @@
                   <div class="input-group">
                     <input class="form-control" type="text" formControlName="newOption" aria-describedby="addButton"
                            placeholder="New option"
-                           [class.is-invalid]="newOption.touched && newOption.invalid"
-                           [class.is-valid]="newOption.value && newOption.valid">
+                           [class.is-invalid]="newOption.touched && (newOption.invalid || options.errors?.['required'])"
+                           [class.is-valid]="newOption.value && newOption.valid && options.valid">
                     <button [disabled]="addNewOptionForm.invalid || !newOption.value"
                             class="btn btn-outline-secondary rounded-end" id="addButton">Add
                     </button>
-                    <div class="invalid-feedback" *ngIf="newOption.invalid && newOption.touched">
+                    <div class="invalid-feedback">
                       <div *ngIf="newOption.errors?.['maxlength']">
                         {{'Length should be less than ' + newOption.errors?.['maxlength']['requiredLength']}}
                       </div>
-                      <div *ngIf="newOption.errors?.['required']">
+                      <div *ngIf="options.errors?.['required']">
                         At least one option is required
                       </div>
                     </div>
