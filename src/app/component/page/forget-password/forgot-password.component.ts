@@ -19,6 +19,7 @@ export class ForgotPasswordComponent {
   })
   isMessageSent$: Subject<boolean> = new BehaviorSubject(false)
   showEmailIsInvalid$: Subject<boolean> = new BehaviorSubject(false)
+  emailSnapshot: string
   @ViewChild('sendMessageBtn', {static: false}) timerButton: ElementRef
 
   constructor(private userService: UserService, private formBuilder: FormBuilder, private router: Router) {
@@ -34,7 +35,8 @@ export class ForgotPasswordComponent {
       alert('The form is filled with invalid data')
       return
     }
-    this.userService.sendResetPasswordMessage(this.email.value)
+    this.emailSnapshot = this.email.value
+    this.userService.sendResetPasswordMessage(this.emailSnapshot)
       .subscribe({
         next: () => {
           TimerAnimation.animateCountdown(60, this.timerButton.nativeElement)
