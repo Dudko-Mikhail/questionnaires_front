@@ -25,6 +25,7 @@ export class SignUpComponent {
   }, {validators: passwordConfirmationValidator()})
 
   showEmailIsNotUnique$: Subject<boolean> = new BehaviorSubject(false)
+  emailSnapshot: string
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
   }
@@ -34,9 +35,9 @@ export class SignUpComponent {
       alert('The form is filled with invalid data')
       return
     }
-    const email: string = this.email.value
+    this.emailSnapshot = this.email.value
     this.userService.signUp({
-      email: email,
+      email: this.emailSnapshot,
       password: this.password.value,
       phoneNumber: this.phoneNumber.value ? this.phoneNumber.value : null,
       firstName: this.firstName.value ? this.firstName.value : null,
@@ -44,7 +45,7 @@ export class SignUpComponent {
     } as IUser)
       .subscribe({
         next: () => {
-          sessionStorage.setItem(environment.continueRegistrationEmailStorageKey, email)
+          sessionStorage.setItem(environment.continueRegistrationEmailStorageKey, this.emailSnapshot)
           this.router.navigate(['continue-registration'])
         },
         error: (err: HttpErrorResponse) => {
