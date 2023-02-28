@@ -29,7 +29,7 @@ const routes: Routes = [
     path: 'congratulations',
     component: CongratulationsComponent,
     title: 'congratulations',
-    canActivate: [Unauthenticated] // todo add special guard
+    canActivate: [Unauthenticated]
   },
   {path: 'sign-up', component: SignUpComponent, title: 'sign-up', canActivate: [Unauthenticated]},
   {path: 'login', component: LoginComponent, title: 'login', canActivate: [Unauthenticated]},
@@ -52,9 +52,14 @@ const routes: Routes = [
     path: 'reset-password',
     component: ResetPasswordComponent,
     title: 'reset password',
-    canActivate: [Unauthenticated] // todo add special guard
+    canActivate: [Unauthenticated]
   },
-  {path: 'continue-registration', component: ContinueRegistrationComponent, title: 'continue registration'}, // todo add special guard
+  {
+    path: 'continue-registration',
+    component: ContinueRegistrationComponent,
+    title: 'continue registration',
+    canActivate: [Unauthenticated]
+  },
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]
 
