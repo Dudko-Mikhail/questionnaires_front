@@ -5,6 +5,7 @@ import {FieldRequest} from "../../../model/field/FieldRequest";
 import {FieldResponse} from "../../../model/field/FieldResponse";
 import {FieldTypeRegistry} from "../../../service/field-type-registry.service";
 import {FieldType} from "../../../model/field/type/FieldType";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-add-edit-field',
@@ -13,34 +14,35 @@ import {FieldType} from "../../../model/field/type/FieldType";
 })
 export class AddEditFieldComponent implements OnInit {
   fieldId: number
+  questionnaireId: number
   @Input() modalId: string
   @Input() isAddField: boolean
   types: Set<FieldType> = new Set<FieldType>()
-  addFieldForm: FormGroup
+  fieldForm: FormGroup
   addNewOptionForm: FormGroup
 
   constructor(private formBuilder: FormBuilder, private fieldService: FieldService,
-              private fieldTypeRegistry: FieldTypeRegistry) {
+              private fieldTypeRegistry: FieldTypeRegistry, private activatedRoute: ActivatedRoute) {
   }
 
   get label() {
-    return this.addFieldForm.controls['label']
+    return this.fieldForm.controls['label']
   }
 
   get type() {
-    return this.addFieldForm.controls['type']
+    return this.fieldForm.controls['type']
   }
 
   get required() {
-    return this.addFieldForm.controls['required']
+    return this.fieldForm.controls['required']
   }
 
   get active() {
-    return this.addFieldForm.controls['active']
+    return this.fieldForm.controls['active']
   }
 
   get options() {
-    return this.addFieldForm.controls['options'] as FormArray
+    return this.fieldForm.controls['options'] as FormArray
   }
 
   get newOption() {
@@ -48,9 +50,10 @@ export class AddEditFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.questionnaireId = this.activatedRoute.snapshot.params?.['id']
     this.fieldService.findAllFieldTypes()
       .subscribe((types: Set<FieldType>) => this.types = types)
-    this.addFieldForm = this.formBuilder.group({
+    this.fieldForm = this.formBuilder.group({
       label: ['', [Validators.required, Validators.maxLength(128)]],
       type: ['', Validators.required],
       options: this.formBuilder.array([]),
@@ -62,7 +65,7 @@ export class AddEditFieldComponent implements OnInit {
       newOption: ['', [Validators.maxLength(64)]]
     })
 
-    this.addFieldForm.controls['type'].valueChanges
+    this.fieldForm.controls['type'].valueChanges
       .subscribe(value => {
         if (this.hasOptions(value)) {
           this.options.setValidators(Validators.required)
@@ -75,7 +78,7 @@ export class AddEditFieldComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.addFieldForm.invalid) {
+    if (this.fieldForm.invalid) {
       alert('The form is filled with invalid data')
       return
     }
@@ -94,7 +97,7 @@ export class AddEditFieldComponent implements OnInit {
   }
 
   addField(): void {
-    this.fieldService.addField(this.convertFormDataIntoField())
+    this.fieldService.addField(this.questionnaireId, this.convertFormDataIntoField())
       .subscribe(() => window.location.reload())
   }
 

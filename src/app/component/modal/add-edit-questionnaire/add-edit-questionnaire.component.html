@@ -1,0 +1,52 @@
+<div class="modal fade" id="{{modalId}}" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-light mb-3">
+        <h1 class="modal-title fs-5 fw-semibold">{{isAddQuestionnaire ? 'Add' : 'Edit'}} Questionnaire</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+      <form [formGroup]="questionnaireForm" (ngSubmit)="submit()">
+        <div class="modal-body px-2">
+          <div class="row mb-3">
+            <label class="col-form-label col-3 text-end required-asterisk">Title</label>
+            <div class="col-8">
+              <input class="form-control" formControlName="title" type="text"
+                     [class.is-invalid]="title.touched && title.invalid"
+                     [class.is-valid]="title.touched && title.valid">
+              <div class="invalid-feedback">
+                <div *ngIf="title.errors?.['required']">Title is required</div>
+                <div *ngIf="title.errors?.['maxlength']">
+                  {{'Length should be less than ' + title.errors?.['maxlength']['requiredLength']}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-form-label col-3 text-end">Description</label>
+            <div class="col-8">
+              <textarea class="form-control" formControlName="description"
+                        [class.is-valid]="description.touched && description.valid">
+              </textarea>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-3 opacity-0">WHITESPACE</div>
+            <div class="col-8">
+              <div class="d-flex">
+                <input class="form-check-input" type="checkbox" formControlName="isActive">
+                <label class="ms-2">Is Active</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light fw-semibold fs-6">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+          <button type="submit" [disabled]="questionnaireForm.invalid" class="btn btn-primary">SAVE
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

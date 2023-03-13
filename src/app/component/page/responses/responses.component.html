@@ -9,7 +9,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let response of responses.content" class="align-middle">
+    <tr *ngFor="let response of  responses.content" class="align-middle">
       <td *ngFor="let field of fields">
         {{response.answer[field.id] ? response.answer[field.id] : 'N/A'}}
       </td>

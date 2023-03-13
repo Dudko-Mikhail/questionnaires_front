@@ -36,7 +36,7 @@ export class LoginComponent {
     this.auth.logIn(new Credentials(email, this.password.value), this.rememberMe.value)
       .subscribe({
         next: () => {
-          this.router.navigate(['fields'])
+          this.router.navigate(['user/questionnaires'])
         },
         error: (err: HttpErrorResponse) => {
           if (err.status == 403) {

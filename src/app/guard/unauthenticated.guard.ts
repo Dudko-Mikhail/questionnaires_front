@@ -6,7 +6,7 @@ import {AuthenticationService} from "../service/authentication.service";
 @Injectable({
   providedIn: 'root'
 })
-export class Unauthenticated implements CanActivate {
+export class UnauthenticatedGuard implements CanActivate {
   constructor(private auth: AuthenticationService, private router: Router) {
   }
 
@@ -18,7 +18,7 @@ export class Unauthenticated implements CanActivate {
         this.auth.logOut()
         return true
       }
-      this.router.navigate(['fields'])
+      this.router.navigate(['user/questionnaires'])
       return false
     }
     return true

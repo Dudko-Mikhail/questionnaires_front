@@ -10,6 +10,7 @@ import {QuestionnaireResponse} from "../model/QuestionnaireResponse";
 // @ts-ignore
 import SockJS from "sockjs-client/dist/sockjs"
 import {Stomp} from "@stomp/stompjs";
+import {ParamsHelper} from "../util/ParamsHelper";
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,8 @@ export class ResponseService extends ServiceErrorHandler {
     return this.insertEvents;
   }
 
-  sendResponse(id: number, answer: QuestionnaireResponse): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/api/users/${id}/responses`,
+  sendResponse(questionnaireId: number, answer: QuestionnaireResponse): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/api/questionnaires/${questionnaireId}/responses`,
       {answer: answer})
       .pipe(
         retry(3),
@@ -44,17 +45,11 @@ export class ResponseService extends ServiceErrorHandler {
       )
   }
 
-  findAllResponsesByUserId(id: number, page?: number, size?: number): Observable<PagedResponse<QuestionnaireResponse>> {
-    let params = new HttpParams()
-    if (page) {
-      params = params.set('page', page)
-    }
-    if (size) {
-      params = params.set('size', size)
-    }
-    return this.http.get<PagedResponse<QuestionnaireResponse>>(`${environment.apiUrl}/api/users/${id}/responses`, {
-      params: params
-    })
+  findAllResponsesByQuestionnaireId(questionnaireId: number, page?: number, size?: number): Observable<PagedResponse<QuestionnaireResponse>> {
+    return this.http.get<PagedResponse<QuestionnaireResponse>>(
+      `${environment.apiUrl}/api/questionnaires/${questionnaireId}/responses`, {
+        params: ParamsHelper.addPageAndSize(new HttpParams(), page, size)
+      })
       .pipe(
         retry(3),
         catchError(this.handleAllErrors.bind(this))

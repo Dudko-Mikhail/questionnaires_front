@@ -24,6 +24,9 @@ import {CongratulationsComponent} from './component/page/congratulations/congrat
 import {ForgotPasswordComponent} from './component/page/forget-password/forgot-password.component';
 import {ResetPasswordComponent} from './component/page/reset-password/reset-password.component';
 import {VerificationCodeComponent} from './component/verification-code/verification-code.component';
+import {UserQuestionnairesComponent} from './component/page/user-questionnaires/user-questionnaires.component';
+import {AddEditQuestionnaireComponent} from './component/modal/add-edit-questionnaire/add-edit-questionnaire.component';
+import { QuestionnaireFilterComponent } from './component/modal/questionnaire-filter/questionnaire-filter.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import {VerificationCodeComponent} from './component/verification-code/verificat
     ForgotPasswordComponent,
     ResetPasswordComponent,
     VerificationCodeComponent,
+    UserQuestionnairesComponent,
+    AddEditQuestionnaireComponent,
+    QuestionnaireFilterComponent,
   ],
   imports: [
     BrowserModule,

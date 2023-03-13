@@ -1,0 +1,38 @@
+<div class="modal fade" id="{{modalId}}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-light mb-2">
+        <h1 class="modal-title fs-5 fw-semibold">Questionnaire Filter</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+      <form class="modal-body px-5" [formGroup]="filterForm" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input class="form-control" type="text" formControlName="title"
+                 [class.is-invalid]="title.touched && title.invalid"
+                 [class.is-valid]="title.touched && title.valid">
+          <div class="invalid-feedback">
+            {{'Length should be less than ' + title.errors?.['maxlength']['requiredLength']}}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Owner email</label>
+          <input class="form-control" type="email" formControlName="ownerEmail"
+                 [class.is-invalid]="ownerEmail.touched && ownerEmail.invalid"
+                 [class.is-valid]="ownerEmail.touched && ownerEmail.valid">
+          <div class="invalid-feedback">
+            {{'Length should be less than ' + ownerEmail.errors?.['maxlength']['requiredLength']}}
+          </div>
+        </div>
+
+        <div class="d-flex mt-4">
+          <button type="submit" data-bs-dismiss="modal" class="btn btn-primary col-3 me-2"
+                  [class.disabled]="filterForm.invalid">Apply
+          </button>
+          <button type="reset" class="btn btn-secondary col-3">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

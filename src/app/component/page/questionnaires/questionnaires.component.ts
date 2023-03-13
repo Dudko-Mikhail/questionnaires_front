@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Metadata, PagedResponse} from "../../../model/PagedResponse";
-import {IQuestionnaire} from "../../../model/IQuestionnaire";
+import {IQuestionnaire} from "../../../model/questionnaire/IQuestionnaire";
 import {QuestionnaireService} from "../../../service/questionnaire.service";
 import {ActivatedRoute, Params} from "@angular/router";
+import {QuestionnaireFilter} from "../../../model/QuestionnaireFilter";
 
 @Component({
   selector: 'app-questionnaires',
@@ -22,10 +23,16 @@ export class QuestionnairesComponent implements OnInit {
   ngOnInit(): void {
     this.path = window.location.pathname
     this.activatedRoute.queryParams.subscribe((params: Params) => {
-      const pageParam: number = params['page']
-      const sizeParam: number = params['size']
-      this.questionnaireService.findQuestionnaires(pageParam, sizeParam)
+      this.questionnaireService.findActiveQuestionnaires(this.buildFilterFromQueryParams(params),
+        params?.['page'], params?.['size'])
         .subscribe((response: PagedResponse<IQuestionnaire>) => this.questionnaires = response)
     })
+  }
+
+  buildFilterFromQueryParams(params: Params): QuestionnaireFilter {
+    const filter = new QuestionnaireFilter()
+    filter.ownerEmail = params['ownerEmail'] ? params['ownerEmail'] : ''
+    filter.title = params['title'] ? params['title'] : ''
+    return filter
   }
 }

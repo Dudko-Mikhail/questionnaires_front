@@ -11,6 +11,7 @@ import {IField} from "../model/field/IField";
 import {FieldTypeRegistry} from "./field-type-registry.service";
 import {FieldType} from "../model/field/type/FieldType";
 import {ServiceErrorHandler} from "./serviceErrorHandler";
+import {ParamsHelper} from "../util/ParamsHelper";
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,8 @@ export class FieldService extends ServiceErrorHandler {
     super(errorService)
   }
 
-  findAllUserFields(id: number): Observable<FieldResponse[]> {
-    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/users/${id}/fields`, {
+  findAllQuestionnaireFields(questionnaireId: number): Observable<FieldResponse[]> {
+    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/questionnaires/${questionnaireId}/fields`, {
       params: new HttpParams().set('size', '1000')
     })
       .pipe(
@@ -32,20 +33,9 @@ export class FieldService extends ServiceErrorHandler {
       )
   }
 
-  findSessionUserFields(page?: number, size?: number): Observable<PagedResponse<FieldResponse>> {
-    return this.findFieldsByUserId(this.auth.getUserId(), page, size)
-  }
-
-  findFieldsByUserId(userId: number, page?: number, size?: number): Observable<PagedResponse<FieldResponse>> {
-    let params = new HttpParams()
-    if (page) {
-      params = params.set('page', page)
-    }
-    if (size) {
-      params = params.set('size', size)
-    }
-    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/users/${userId}/fields`, {
-      params: params
+  findFieldsByQuestionnaireId(questionnaireId: number, page?: number, size?: number): Observable<PagedResponse<FieldResponse>> {
+    return this.http.get<PagedResponse<IField>>(`${environment.apiUrl}/api/questionnaires/${questionnaireId}/fields`, {
+      params: ParamsHelper.addPageAndSize(new HttpParams(), page, size)
     })
       .pipe(
         retry(3),
@@ -68,8 +58,8 @@ export class FieldService extends ServiceErrorHandler {
       )
   }
 
-  addField(field: FieldRequest): Observable<FieldResponse> {
-    return this.http.post<IField>(`${environment.apiUrl}/api/users/${this.auth.getUserId()}/fields`, field)
+  addField(questionnaireId: number, field: FieldRequest): Observable<FieldResponse> {
+    return this.http.post<IField>(`${environment.apiUrl}/api/questionnaires/${questionnaireId}/fields`, field)
       .pipe(
         retry(3),
         map(this.mapToFieldResponse.bind(this)),

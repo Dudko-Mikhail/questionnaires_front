@@ -13,7 +13,7 @@ export class NotFoundComponent {
 
   goHome(): void {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate(['fields'])
+      this.router.navigate(['user/questionnaires'])
       return
     }
     this.router.navigate(['questionnaires'])

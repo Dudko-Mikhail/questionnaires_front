@@ -1,10 +1,9 @@
-<form class="border rounded-3 py-3 mxw-500 center" [formGroup]="editProfileForm" (ngSubmit)="submit()">
-  <div class="ps-3">
-    <div class="fs-5 mb-3 fw-semibold">Edit Profile</div>
+<div class="border rounded-3 mxw-500 center py-3">
+  <div class="ps-3 mb-3">
+    <div class="fs-5 fw-semibold">Edit Profile</div>
   </div>
   <hr class="mb-6"/>
-
-  <div class="px-5">
+  <form class="px-5" [formGroup]="editProfileForm" (ngSubmit)="submit()">
     <div class="mb-3">
       <div *ngIf="showEmailIsNotUniqueMessage$ | async" class="alert alert-danger alert-dismissible fw-semibold">
         Email: {{emailSnapshot}} is already taken
@@ -57,5 +56,5 @@
     </div>
 
     <button [disabled]="editProfileForm.invalid" type="submit" class="btn btn-primary w-25">Save</button>
-  </div>
-</form>
+  </form>
+</div>

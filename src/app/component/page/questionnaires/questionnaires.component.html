@@ -1,14 +1,16 @@
 <div class="center mxw-900">
-  <h1 class="fs-5 fw-semibold border border-bottom-0 rounded py-3 ps-3 mb-0">Questionnaires</h1>
+  <div class="d-flex justify-content-between border border-bottom-0 rounded align-items-center px-3 py-3">
+    <div class="fw-bold fs-5">Questionnaires</div>
+    <button class="btn btn-primary fs-6" data-bs-toggle="modal" data-bs-target="#questionnaireFilter">
+      Filtration
+    </button>
+  </div>
   <div class="border rounded py-3 px-5 mt-0">
     <div class="mb-4">
-      <div routerLink="{{questionnaire.userId}}" *ngFor="let questionnaire of questionnaires.content"
+      <div [routerLink]="['/questionnaires', questionnaire.id]" *ngFor="let questionnaire of questionnaires.content"
            class="border mb-3 rounded d-flex align-items-center justify-content-between px-3 py-2 questionnaire">
-        <div><span class="fw-semibold">Owner:</span> {{questionnaire.email}}</div>
-        <div class="d-flex">
-          <div class="me-4"><span class="fw-semibold">Fields:</span> {{questionnaire.fieldsCount}}</div>
-          <div><span class="fw-semibold">Required:</span> {{questionnaire.requiredFieldsCount}}</div>
-        </div>
+        <div><span class="fw-semibold">Title:</span> {{questionnaire.title}}</div>
+        <div><span class="fw-semibold">Owner:</span> {{questionnaire.ownerEmail}}</div>
       </div>
     </div>
     <div class="mb-3">
@@ -17,3 +19,5 @@
     </div>
   </div>
 </div>
+
+<app-questionnaire-filter [modalId]="'questionnaireFilter'"></app-questionnaire-filter>

@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FieldService} from "../../../service/field.service";
-import {Metadata, PagedResponse} from "../../../model/PagedResponse";
-import {ActivatedRoute, Params} from "@angular/router";
+import {PagedResponse} from "../../../model/PagedResponse";
+import {ActivatedRoute} from "@angular/router";
 import {AddEditFieldComponent} from "../../modal/add-edit-field/add-edit-field.component";
 import {ModalService} from "../../../service/modal.service";
 import {FieldResponse} from "../../../model/field/FieldResponse";
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-fields',
@@ -13,10 +14,7 @@ import {FieldResponse} from "../../../model/field/FieldResponse";
 })
 export class FieldsComponent implements OnInit {
   path: string
-  fields: PagedResponse<FieldResponse> = new class implements PagedResponse<FieldResponse> {
-    content: FieldResponse[] = []
-    metadata: Metadata
-  }
+  fields: PagedResponse<FieldResponse>
   @ViewChild('editFieldModal', {static: false}) editFieldComponent: AddEditFieldComponent
 
   constructor(private fieldService: FieldService, private activatedRoute: ActivatedRoute,
@@ -25,12 +23,13 @@ export class FieldsComponent implements OnInit {
 
   ngOnInit(): void {
     this.path = window.location.pathname
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      const pageParam: number = params['page']
-      const sizeParam: number = params['size']
-      this.fieldService.findSessionUserFields(pageParam, sizeParam)
-        .subscribe((response: PagedResponse<FieldResponse>) => this.fields = response)
-    })
+    this.activatedRoute.data.pipe(
+      map(data => data?.['fields'])
+    ).subscribe(
+      (fields: PagedResponse<FieldResponse>) => {
+        this.fields = fields
+      }
+    )
   }
 
   deleteField(id: number): void {

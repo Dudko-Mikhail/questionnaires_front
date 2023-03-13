@@ -11,30 +11,58 @@ import {NotFoundComponent} from "./component/page/not-found/not-found.component"
 import {AuthenticatedGuard} from "./guard/authenticated.guard";
 import {QuestionnaireComponent} from "./component/page/questionnaire/questionnaire.component";
 import {CongratulationsComponent} from "./component/page/congratulations/congratulations.component";
-import {Unauthenticated} from "./guard/unauthenticated.guard";
+import {UnauthenticatedGuard} from "./guard/unauthenticated.guard";
 import {ForgotPasswordComponent} from "./component/page/forget-password/forgot-password.component";
 import {ResetPasswordComponent} from "./component/page/reset-password/reset-password.component";
 import {ContinueRegistrationComponent} from "./component/page/continue-registration/continue-registration.component";
+import {UserQuestionnairesComponent} from "./component/page/user-questionnaires/user-questionnaires.component";
+import {FieldsResolver} from "./resolver/fields.resolver";
+import {ResponsesResolver} from "./resolver/responses.resolver";
+import {QuestionnaireResolver} from "./resolver/questionnaire.resolver";
 
 const routes: Routes = [
   {path: '', redirectTo: '/questionnaires', pathMatch: "full"},
-  {path: 'questionnaires', component: QuestionnairesComponent, title: 'questionnaires', canActivate: [Unauthenticated]},
+  {
+    path: 'questionnaires',
+    component: QuestionnairesComponent,
+    title: 'questionnaires',
+    canActivate: [UnauthenticatedGuard]
+  },
   {
     path: 'questionnaires/:id',
     component: QuestionnaireComponent,
     title: 'questionnaire',
-    canActivate: [Unauthenticated]
+    canActivate: [UnauthenticatedGuard],
+    resolve: {questionnaire: QuestionnaireResolver}
   },
   {
     path: 'congratulations',
     component: CongratulationsComponent,
     title: 'congratulations',
-    canActivate: [Unauthenticated]
+    canActivate: [UnauthenticatedGuard]
   },
-  {path: 'sign-up', component: SignUpComponent, title: 'sign-up', canActivate: [Unauthenticated]},
-  {path: 'login', component: LoginComponent, title: 'login', canActivate: [Unauthenticated]},
-  {path: 'responses', component: ResponsesComponent, title: 'responses', canActivate: [AuthenticatedGuard]},
-  {path: 'fields', component: FieldsComponent, title: 'fields', canActivate: [AuthenticatedGuard]},
+  {path: 'sign-up', component: SignUpComponent, title: 'sign-up', canActivate: [UnauthenticatedGuard]},
+  {path: 'login', component: LoginComponent, title: 'login', canActivate: [UnauthenticatedGuard]},
+  {
+    path: 'user/questionnaires',
+    component: UserQuestionnairesComponent,
+    title: 'questionnaires',
+    canActivate: [AuthenticatedGuard]
+  },
+  {
+    path: 'questionnaires/:id/responses',
+    component: ResponsesComponent,
+    title: 'responses',
+    canActivate: [AuthenticatedGuard],
+    resolve: {responses: ResponsesResolver}
+  },
+  {
+    path: 'questionnaires/:id/fields',
+    component: FieldsComponent,
+    title: 'fields',
+    canActivate: [AuthenticatedGuard],
+    resolve: {fields: FieldsResolver}
+  },
   {path: 'profile/edit', component: EditProfileComponent, title: 'edit profile', canActivate: [AuthenticatedGuard]},
   {
     path: 'profile/change-password',
@@ -46,19 +74,19 @@ const routes: Routes = [
     path: 'forgot-password',
     component: ForgotPasswordComponent,
     title: 'forgot password',
-    canActivate: [Unauthenticated]
+    canActivate: [UnauthenticatedGuard]
   },
   {
     path: 'reset-password',
     component: ResetPasswordComponent,
     title: 'reset password',
-    canActivate: [Unauthenticated]
+    canActivate: [UnauthenticatedGuard]
   },
   {
     path: 'continue-registration',
     component: ContinueRegistrationComponent,
     title: 'continue registration',
-    canActivate: [Unauthenticated]
+    canActivate: [UnauthenticatedGuard]
   },
   {path: '**', component: NotFoundComponent, title: 'not found'}
 ]

@@ -2,10 +2,10 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-light mb-3">
-        <h1 class="modal-title fs-5 fw-semibold">Add Field</h1>
+        <h1 class="modal-title fs-5 fw-semibold">{{isAddField ? 'Add' : 'Edit'}} Field</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
       </div>
-      <form [formGroup]="addFieldForm" (ngSubmit)="submit()">
+      <form [formGroup]="fieldForm" (ngSubmit)="submit()">
         <div class="modal-body px-2">
           <div class="row mb-3">
             <label class="col-form-label col-3 text-end required-asterisk">Label</label>
@@ -86,7 +86,7 @@
         </div>
         <div class="modal-footer bg-light fw-semibold fs-6">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-          <button type="submit" [disabled]="addFieldForm.invalid" class="btn btn-primary">SAVE
+          <button type="submit" [disabled]="fieldForm.invalid" class="btn btn-primary">SAVE
           </button>
         </div>
       </form>
