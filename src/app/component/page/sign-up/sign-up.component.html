@@ -31,7 +31,7 @@
     <input class="form-control" formControlName="confirmPassword" type="password" placeholder="Confirm Password"
            [class.is-invalid]="signUpForm.errors?.['mismatch']"
            [class.is-valid]="confirmPassword.value && !signUpForm.errors?.['mismatch']">
-    <div class="invalid-feedback" *ngIf="signUpForm.errors?.['mismatch']">Password do not match</div>
+    <div class="invalid-feedback" *ngIf="signUpForm.errors?.['mismatch']">Password does not match</div>
   </div>
   <div class="mb-2">
     <input class="form-control" formControlName="firstName" type="text" placeholder="First Name"
