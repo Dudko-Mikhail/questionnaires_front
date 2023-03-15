@@ -40,9 +40,10 @@
             <div class="row" *ngIf="hasOptions(type.value)">
               <label class="col-form-label col-3 text-end required-asterisk">Options</label>
               <div class="col-8" formArrayName="options">
-                <div class="mb-2" *ngFor="let option of options.controls; let i = index">
-                  <input class="form-control mb-1" [formControlName]="i" (change)="removeIfEmpty($event, i)"
+                <div class="mb-2 input-group" *ngFor="let option of options.controls; let i = index">
+                  <input class="form-control" [formControlName]="i" (change)="removeIfEmpty($event, i)"
                          [class.is-invalid]="options.at(i).invalid">
+                  <button class="btn btn-outline-danger rounded-end" type="button" (click)="options.removeAt(i)">X</button>
                   <div class="invalid-feedback" *ngIf="options.at(i).invalid">
                     {{'Length should be less than ' + options.at(i).errors?.['maxlength']['requiredLength']}}
                   </div>

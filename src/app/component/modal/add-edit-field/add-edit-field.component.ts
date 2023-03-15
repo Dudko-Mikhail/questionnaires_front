@@ -58,7 +58,7 @@ export class AddEditFieldComponent implements OnInit {
       type: ['', Validators.required],
       options: this.formBuilder.array([]),
       required: [false],
-      active: [false]
+      active: [true]
     })
 
     this.addNewOptionForm = this.formBuilder.group({
