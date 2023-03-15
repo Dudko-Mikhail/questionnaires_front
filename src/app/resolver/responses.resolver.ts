@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {Observable, ReplaySubject, Subject, switchMap} from 'rxjs';
+import {Observable, Subject, switchMap} from 'rxjs';
 import {PagedResponse} from "../model/PagedResponse";
 import {QuestionnaireResponse} from "../model/QuestionnaireResponse";
 import {ResponseService} from "../service/response.service";
@@ -9,7 +9,7 @@ import {ResponseService} from "../service/response.service";
   providedIn: 'root'
 })
 export class ResponsesResolver implements Resolve<PagedResponse<QuestionnaireResponse>> {
-  private responses$: Subject<PagedResponse<QuestionnaireResponse>> = new ReplaySubject(1);
+  private responses$: Subject<PagedResponse<QuestionnaireResponse>> = new Subject();
 
   constructor(private responseService: ResponseService) {
   }

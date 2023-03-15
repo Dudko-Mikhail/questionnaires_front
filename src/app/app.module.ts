@@ -26,7 +26,7 @@ import {ResetPasswordComponent} from './component/page/reset-password/reset-pass
 import {VerificationCodeComponent} from './component/verification-code/verification-code.component';
 import {UserQuestionnairesComponent} from './component/page/user-questionnaires/user-questionnaires.component';
 import {AddEditQuestionnaireComponent} from './component/modal/add-edit-questionnaire/add-edit-questionnaire.component';
-import { QuestionnaireFilterComponent } from './component/modal/questionnaire-filter/questionnaire-filter.component';
+import {QuestionnaireFilterComponent} from './component/modal/questionnaire-filter/questionnaire-filter.component';
 
 @NgModule({
   declarations: [

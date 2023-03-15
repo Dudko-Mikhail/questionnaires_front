@@ -23,21 +23,13 @@ export class FieldsComponent implements OnInit {
 
   ngOnInit(): void {
     this.path = window.location.pathname
-    this.activatedRoute.data.pipe(
-      map(data => data?.['fields'])
-    ).subscribe(
-      (fields: PagedResponse<FieldResponse>) => {
-        this.fields = fields
-      }
-    )
+    this.activatedRoute.data.pipe(map(data => data?.['fields']))
+      .subscribe((fields: PagedResponse<FieldResponse>) => this.fields = fields)
   }
 
   deleteField(id: number): void {
     this.fieldService.deleteFieldById(id)
-      .subscribe(() => {
-          window.location.reload()
-        }
-      )
+      .subscribe(() => window.location.reload())
   }
 
   prepareEditComponent(field: FieldResponse): void {

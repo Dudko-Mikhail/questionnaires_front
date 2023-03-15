@@ -13,6 +13,7 @@ import {FieldService} from "../../../service/field.service";
 })
 export class ResponsesComponent implements OnInit {
   path: string
+  questionnaireId: number
   fields: FieldResponse[] = []
   responses: PagedResponse<QuestionnaireResponse>
 
@@ -20,7 +21,9 @@ export class ResponsesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fieldsService.findAllQuestionnaireFields(this.activatedRoute.snapshot.params?.['id'])
+    this.path = window.location.pathname
+    this.questionnaireId = this.activatedRoute.snapshot.params?.['id']
+    this.fieldsService.findAllQuestionnaireFields(this.questionnaireId)
       .subscribe((fields: FieldResponse[]) => this.fields = fields)
     this.activatedRoute.data.pipe(map(data => data?.['responses']))
       .subscribe((responses: PagedResponse<QuestionnaireResponse>) => this.responses = responses)

@@ -19,7 +19,7 @@ export class ParamsHelper {
     return params.set(paramName, paramValue)
   }
 
-  public static fillWithObjectData(params: HttpParams, object: {[key: string]: string | number | boolean}): HttpParams {
+  public static fillWithObjectData(params: HttpParams, object: { [key: string]: string | number | boolean }): HttpParams {
     if (object !== null && object !== undefined) {
       for (const key in object) {
         params = params.set(key, object[key])

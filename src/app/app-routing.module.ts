@@ -54,14 +54,16 @@ const routes: Routes = [
     component: ResponsesComponent,
     title: 'responses',
     canActivate: [AuthenticatedGuard],
-    resolve: {responses: ResponsesResolver}
+    resolve: {responses: ResponsesResolver},
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
   },
   {
     path: 'questionnaires/:id/fields',
     component: FieldsComponent,
     title: 'fields',
     canActivate: [AuthenticatedGuard],
-    resolve: {fields: FieldsResolver}
+    resolve: {fields: FieldsResolver},
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
   },
   {path: 'profile/edit', component: EditProfileComponent, title: 'edit profile', canActivate: [AuthenticatedGuard]},
   {

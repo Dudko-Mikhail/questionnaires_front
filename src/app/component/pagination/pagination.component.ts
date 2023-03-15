@@ -23,11 +23,13 @@ export class PaginationComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.size = params['size']
+      this.page = params['page']
     })
   }
 
   goToPage(): void {
     if (this.page && this.page > 0) {
+      alert(`page: ${this.page}, size: ${this.size}`)
       this.router.navigate([`${this.basePath}`], {queryParams: {'page': this.page, 'size': this.size}})
     }
   }
